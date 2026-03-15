@@ -104,29 +104,43 @@ If you return without writing to this file, the next phase **CANNOT** find your 
 
 The skill registry is a catalog of all available skills (user-level + project-level) that sub-agents read before starting any task. It is **infrastructure, not an SDD artifact** — it exists independently of any persistence mode.
 
+### Where the registry lives
+
+The registry is ALWAYS written to `.atl/skill-registry.md` in the project root, regardless of mode. If engram is available, it's ALSO saved there as a cross-session bonus.
+
+| Source | Location | Priority |
+|--------|----------|----------|
+| File | `.atl/skill-registry.md` | READ FIRST |
+
+### How to generate/update
+
+Run the `skill-registry` skill, or run `sdd-init` (which includes registry generation).
+
+
 ### Sub-agent skill loading protocol
 
 **EVERY sub-agent MUST check the skill registry as its FIRST step**, before starting any work:
 
 ```
-1. **Task Context**: Since we are in OpenSpec mode, check the active change directory: `openspec/{change-name}/`. 
+1. If engram not available or not found: read .atl/skill-registry.md
+2. **Task Context**: Since we are in OpenSpec mode, check the active change directory: `openspec/{change-name}/`. 
    - Review relevant files (`spec.md`, `design.md`, or `tasks.md`) for any task-specific instructions or required skills.
-2. **If no registry exists**: Proceed without extra skills (this is not an error).
-3. **Identify and Load**: From the registry, identify skills whose triggers match your current task: example:
+3. **If no registry exists**: Proceed without extra skills (this is not an error).
+4. **Identify and Load**: From the registry, identify skills whose triggers match your current task: example:
    - Writing React code? → Load react-19
    - Reviewing a PR? → Load pr-review
    - Creating a Jira task? → Load jira-task
    - Writing tests? → Load pytest/playwright
-4. **Read Specific Skills**: Load and read the corresponding `SKILL.md` files from the repository.
-5. **Follow Conventions**: Read any project convention files listed in the registry to ensure technical nuance is preserved.
-6. **THEN proceed with your actual task**.
+5. **Read Specific Skills**: Load and read the corresponding `SKILL.md` files from the repository.
+6. **Follow Conventions**: Read any project convention files listed in the registry to ensure technical nuance is preserved.
+7. **THEN proceed with your actual task**.
 ```
 
 The orchestrator MUST include this instruction in ALL sub-agent prompts:
 ```
 SKILL LOADING (do this FIRST):
 Check for available skills and local context:
-  1. Primary: Read the project skill registry at `.agent/SKILLS`.
+  1. Primary: Read the project skill registry at `.agent/SKILLS` and `.atl/skill-registry.md`.
   2. Context: Review the active change directory at `openspec/{change-name}/` for any phase-specific requirements or local skill definitions found in `spec.md`, `design.md`, or `tasks.md`.
 Load and follow any skills or conventions relevant to your task.
 ```
