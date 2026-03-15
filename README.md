@@ -4,5 +4,3 @@ Skills globales para usar en Antigravity. Almacenando en el path correcto, tambi
 
 
 
-x
-
