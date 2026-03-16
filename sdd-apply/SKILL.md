@@ -34,7 +34,7 @@ Read and follow `skills/_shared/persistence-contract.md` for mode resolution rul
 **Do this FIRST, before any other work.**
 
 1. Read `.atl/skill-registry.md` from the project root
-2. If neither exists: proceed without skills (not an error)
+2. If not exists: proceed without skills (not an error)
 
 From the registry, identify and read any skills whose triggers match your task. Also read any project convention files listed in the registry.
 
