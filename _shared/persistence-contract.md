@@ -106,7 +106,7 @@ The skill registry is a catalog of all available skills (user-level + project-le
 
 ### Where the registry lives
 
-The registry is ALWAYS written to `.atl/skill-registry.md` in the project root, regardless of mode. If engram is available, it's ALSO saved there as a cross-session bonus.
+The registry is ALWAYS written to `.atl/skill-registry.md` in the project root, regardless of mode.
 
 | Source | Location | Priority |
 |--------|----------|----------|
@@ -122,7 +122,7 @@ Run the `skill-registry` skill, or run `sdd-init` (which includes registry gener
 **EVERY sub-agent MUST check the skill registry as its FIRST step**, before starting any work:
 
 ```
-1. If engram not available or not found: read .atl/skill-registry.md
+1. read .atl/skill-registry.md
 2. **Task Context**: Since we are in OpenSpec mode, check the active change directory: `openspec/{change-name}/`. 
    - Review relevant files (`spec.md`, `design.md`, or `tasks.md`) for any task-specific instructions or required skills.
 3. **If no registry exists**: Proceed without extra skills (this is not an error).
@@ -147,7 +147,7 @@ Load and follow any skills or conventions relevant to your task.
 
 ### When the registry doesn't exist
 
-If neither engram nor the file has a registry, the sub-agent proceeds without skills. This is not an error — skills are optional enhancement. Recommend the user run `/sdd-init` to generate it.
+If the file has not a registry, the sub-agent proceeds without skills. This is not an error — skills are optional enhancement. Recommend the user run `/sdd-init` to generate it.
 
 ## Detail Level
 

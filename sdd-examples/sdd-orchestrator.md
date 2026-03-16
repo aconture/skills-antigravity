@@ -1,6 +1,6 @@
-# this is an adaptation from https://github.com/Gentleman-Programming/agent-teams-lite.git
+# This is an adaptation from https://github.com/Gentleman-Programming/agent-teams-lite.git
 
-# Agent Teams Lite — Orchestrator Rule for Antigravity
+# Antigravity Agent Teams — Orchestrator Rule for Antigravity
 
 Add this as a global rule in `~/.gemini/GEMINI.md` or as a workspace rule in `.agent/rules/sdd-orchestrator.md`.
 
@@ -37,10 +37,8 @@ These rules apply to EVERY user request, not just SDD workflows.
 SDD is the structured planning layer for substantial changes.
 
 ### Artifact Store Policy
-- `artifact_store.mode`: `engram | openspec | hybrid | none`
-- Default: `engram` when available; `openspec` only if user explicitly requests file artifacts; `hybrid` for both backends simultaneously; otherwise `none`.
-- `hybrid` persists to BOTH Engram and OpenSpec. Provides cross-session recovery + local file artifacts. Consumes more tokens per operation.
-- In `none`, do not write project files. Return results inline and recommend enabling `engram` or `openspec`.
+- `artifact_store.mode`: ` openspec `
+- Default: `openspec` when available.
 
 ### Commands
 - `/sdd-init` -> run `sdd-init`
@@ -80,10 +78,13 @@ Sub-agents get a fresh context with NO memory. The orchestrator controls context
 
 #### Non-SDD Tasks (general delegation)
 
-- **Read context**: The ORCHESTRATOR searches engram (`mem_search`) for relevant prior context and passes it in the sub-agent prompt. The sub-agent does NOT search engram itself.
-- **Write context**: The sub-agent MUST save significant discoveries, decisions, or bug fixes to engram via `mem_save` before returning. It has the full detail — if it waits for the orchestrator, nuance is lost.
-- **When to include engram write instructions**: Always. Add to the sub-agent prompt: `"If you make important discoveries, decisions, or fix bugs, save them to engram via mem_save with project: '{project}'."`
-- **Skills**: Always include in the sub-agent prompt: `"Coding and workflow skills may be available. Before starting, check for a skill registry: 1. mem_search(query: 'skill-registry', project: '{project}') 2. Fallback: read .atl/skill-registry.md — If found, load any skills whose triggers match your task."`
+- **Read context**: The ORCHESTRATOR:
+  1. Read the state and artifacts exclusively from the `openspec/` directory, for relevant prior context and passes it in the sub-agent prompt. The sub-agent does NOT search `openspec/` itself.
+  2. Identify the active change by reading `openspec/active/current_task.txt` (o el archivo de índice que utilices).
+  3. Load project rules from `.agent/` or `AGENTS.md` to maintain consistency.
+- **Write context**: The sub-agent MUST save significant discoveries, decisions, or bug fixes directly into the corresponding files within the `openspec/` directory (such as proposal.md, spec.md, or design.md) before returning. It has the full detail — if it waits for the orchestrator, nuance is lost.
+- **When to include openspec write instructions**: Always. Add to the sub-agent prompt: `"If you make important discoveries, decisions, or fix bugs, you MUST document them directly in the corresponding Markdown files within the openspec/ directory (e.g., proposal.md, spec.md, or design.md) before returning. You have the full detail — if you wait for the orchestrator, nuance is lost."`
+- **Skills**: Always include in the sub-agent prompt: `"Coding and workflow skills are available. Before starting, you MUST consult the skill registry. Since we are operating in OpenSpec mode, also check for specific skill definitions or phase requirements within the openspec/ directory—reviewing files such as spec.md or design.md as appropriate. Load and follow only the skills whose triggers match your current task to maintain a clean context window."`
 
 #### SDD Phases
 
@@ -100,37 +101,14 @@ Each SDD phase has explicit read/write rules based on the dependency graph:
 | `sdd-verify` | Spec + Tasks | Yes (`verify-report`) |
 | `sdd-archive` | All artifacts | Yes (`archive-report`) |
 
-For SDD phases with required dependencies, the sub-agent reads them directly from the backend (engram or openspec) — the orchestrator passes artifact references (topic keys or file paths), NOT the content itself.
-
-#### Engram Topic Key Format
-
-When launching sub-agents for SDD phases with engram mode, pass these exact topic_keys as artifact references:
-
-| Artifact | Topic Key |
-|----------|-----------|
-| Project context | `sdd-init/{project}` |
-| Exploration | `sdd/{change-name}/explore` |
-| Proposal | `sdd/{change-name}/proposal` |
-| Spec | `sdd/{change-name}/spec` |
-| Design | `sdd/{change-name}/design` |
-| Tasks | `sdd/{change-name}/tasks` |
-| Apply progress | `sdd/{change-name}/apply-progress` |
-| Verify report | `sdd/{change-name}/verify-report` |
-| Archive report | `sdd/{change-name}/archive-report` |
-| DAG state | `sdd/{change-name}/state` |
-
-Sub-agents retrieve full content via two steps:
-1. `mem_search(query: "{topic_key}", project: "{project}")` → get observation ID
-2. `mem_get_observation(id: {id})` → full content (REQUIRED — search results are truncated)
+For SDD phases with required dependencies, the sub-agent reads them directly from the backend (openspec) — the orchestrator passes artifact references (topic keys or file paths), NOT the content itself.
 
 ### State and Conventions (source of truth)
 Shared convention files under `~/.gemini/antigravity/skills/_shared/` (global) or `.agent/skills/_shared/` (workspace) provide full reference documentation (sub-agents have inline instructions — convention files are supplementary):
-- `engram-convention.md` for artifact naming and two-step recovery
 - `persistence-contract.md` for mode behavior and state persistence/recovery
 - `openspec-convention.md` for file layout when mode is `openspec`
 
 ### Recovery Rule
 If SDD state is missing (for example after context compaction), recover before continuing:
-- `engram`: `mem_search(...)` then `mem_get_observation(...)`
 - `openspec`: read `openspec/changes/*/state.yaml`
 - `none`: explain that state was not persisted

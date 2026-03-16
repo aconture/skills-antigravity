@@ -128,7 +128,7 @@ Ready for /sdd-explore <topic> or /sdd-new <change-name>.
 {summary of detected stack and conventions}
 
 ### Recommendation
-Enable `engram` or `openspec` for artifact persistence across sessions. Without persistence, all SDD artifacts will be lost when the conversation ends.
+Enable `openspec` for artifact persistence across sessions. Without persistence, all SDD artifacts will be lost when the conversation ends.
 
 ### Next Steps
 Ready for /sdd-explore <topic> or /sdd-new <change-name>.
