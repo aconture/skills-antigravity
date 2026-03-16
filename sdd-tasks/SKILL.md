@@ -138,7 +138,7 @@ Return to the orchestrator:
 ## Tasks Created
 
 **Change**: {change-name}
-**Location**: `openspec/changes/{change-name}/tasks.md` (openspec/hybrid) | Engram `sdd/{change-name}/tasks` (engram) | inline (none)
+**Location**: `openspec/changes/{change-name}/tasks.md` (openspec) | inline (none)
 
 ### Breakdown
 | Phase | Tasks | Focus |
