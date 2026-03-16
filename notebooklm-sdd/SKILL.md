@@ -22,5 +22,5 @@ powershell -ExecutionPolicy Bypass -File "$HOME\.gemini\antigravity\skills\noteb
 ## Permisos
 Se requiere acceso a la terminal y ejecución de scripts de PowerShell
 
-## Output 
+## Contrato de salida
 Al finalizar, muestrame el path del directorio del archivo que has generado y el nombre del archivo, y la lista de archivos que has compilado

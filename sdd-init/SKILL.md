@@ -83,7 +83,7 @@ rules:
 
 Follow the same logic as the `skill-registry` skill (`skills/skill-registry/SKILL.md`):
 
-1. Scan user skills: glob `*/SKILL.md` across ALL known skill directories. **User-level**: `~/.gemini/skills/`, parent of this skill file. **Project-level**: `.gemini/skills/`, `.agent/skills/`, `skills/`. Skip `sdd-*`, `_shared`, `skill-registry`. Deduplicate by name (project-level wins). Read frontmatter triggers.
+1. You MUST Scan user skills, EVERY time /sdd-init runs: glob `*/SKILL.md` across ALL known skill directories. **User-level**: `~/.gemini/skills/`, parent of this skill file. **Project-level**: `.gemini/skills/`, `.agent/skills/`, `skills/`. Skip `sdd-*`, `_shared`, `skill-registry`. Deduplicate by name (project-level wins). Read frontmatter triggers.
 2. Scan project conventions: check for `agents.md`, `AGENTS.md`, (project-level), `GEMINI.md`, in the project root. If an index file is found (e.g., `agents.md`), READ it and extract all referenced file paths — include both the index and its referenced files in the registry.
 3. **ALWAYS write `.atl/skill-registry.md`** in the project root (create `.atl/` if needed). This file is mode-independent — it's infrastructure, not an SDD artifact.
 
