@@ -38,8 +38,7 @@ Para que Antigravity reconozca estas capacidades, el repositorio debe estar clon
     - Copia `~/sdd-examples/sdd-orchestrator.md` a `~/.gemini/GEMINI.md`.
 
 ---
-
-## 🧠 Conceptos Clave para Humanos
+## 🧠 Conceptos Clave
 
 ### 1. El Orquestador vs. Sub-Agentes
 El **Orquestador** (tú hablas con él) es un coordinador. No "ensucia" su memoria con detalles técnicos. Cuando necesita trabajar, delega la tarea a un **Sub-Agente** especializado que carga solo las **Skills** necesarias para esa tarea. Esto mantiene el contexto limpio y evita errores.
