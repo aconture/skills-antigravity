@@ -26,26 +26,69 @@ Estas herramientas harán el coding más determinístico.
 | Directorio | Descripción |
 | :--- | :--- |
 | `Skill globales/` | Habilidades transversales aplicables a cualquier proyecto (como el núcleo de SDD). |
-| `Skill por proyecto/` | Habilidades y agentes configurados para necesidades específicas de desarrollo. |
+| `Skill por proyecto/` | Habilidades declaradas para necesidades específicas. |
 | `.agent/` | Definiciones técnicas de agentes y reglas de comportamiento. |
 
 ---
 
 ## 🛠️ Cómo empezar (Quick Start)
 
-Para que Antigravity reconozca estas capacidades, el repositorio debe estar clonado en la ruta de skills del sistema:
+### Para que Antigravity reconozca estas capacidades:
 
-1.  Navega a tu directorio de configuración de Antigravity (usualmente `~/.gemini/antigravity/skills`).
-
-2.  Clona este repositorio:
+1.  Clona este repositorio:
     ```powershell
     git clone https://github.com/aconture/skills-antigravity.git .
     ```
-3.  Configura el orquestador copiando el archivo de ejemplo:
-    - Copia `~/sdd-examples/sdd-orchestrator.md` a `~/.gemini/GEMINI.md` 
+### Agentes SDD con alcance Global (todos los workspace) `Skill globales/`:
+#### En caso de que quieras tener el comportamiento SDD con alcance en **Todos tus Workspaces**
 
-4. En caso de que quieras tener repositorio en un workspace: Copia `~/sdd-examples/sdd-orchestrator.md` a `/.agent/rules/sdd-orchestrator.md` del workspace.
-Copia AGENTS.md al root del workspace.
+```
+~/.gemini/antigravity/
+├── GENINI.md               <- Def orquestador
+└── skills/                 <- Def comportamiento SDD
+```
+
+2.  Definiciones del comportamiento SDD. Navega a tu directorio de configuración de Antigravity (usualmente `~/.gemini/antigravity/skills`). 
+    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Skill globales/SDD-Agents-Team [OPENSPEC]`. 
+
+3. Configura el orquestador copiando su definición:
+    - `Skill globales/rules/sdd-orchestrator.md` a `~/.gemini/GEMINI.md` 
+
+### Agentes SDD con alcance Local (workspace específico) `Skill globales/`:
+#### En caso de que quieras tener el comportamiento SDD sólo en un **Workspace Específico**
+En la carpeta `.agent` se alojarán las definiciones.
+
+```
+<tu workspace>/
+├── AGENTS.md               <- Índice de rules, skills y agentes
+├── .agent/                 
+    ├── rules/
+        ├── sdd-orchestrator.md <- Def orquestador
+    └── skills/
+    ├── agents/             <- Def comportamiento SDD
+```
+
+2. Definiciones del comportamiento SDD. Navega a tu directorio de root del workspace. 
+    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Skill globales/SDD-Agents-Team [OPENSPEC]`, al directorio `~.agent/skills/`
+
+3. Configura el índice de rules y skills copiando: 
+    - `Skill globales/AGENTS.md` al root del workspace `~/AGENTS.md`
+
+4. Configura el orquestador copiando su definición:
+    - `Skill globales/rules/sdd-orchestrator.md` a `~.agent/rules/sdd-orchestrator.md`
+
+### Skills específicas para un proyecto `Skill por proyecto/`
+```
+<tu workspace>/
+├── AGENTS.md
+├── .agent/                 
+    ├── rules/
+    └── skills/
+    ├── agents/             <- Skills específicas (no-SDD)
+```
+
+5. Definiciones del comportamiento de cada skill. Navega a tu directorio de root del workspace.
+    - Allí copia cada subdirectorio `Skill por proyecto/.agent/skills` que encuentras dentro del directorio `~.agent/skills/`.
 
 ---
 ## 🧠 Conceptos Clave
@@ -61,23 +104,23 @@ Es nuestro estándar de calidad. El flujo de trabajo es:
 
 La Gestión de SDD se realiza invocando desde el prompt de esta manera:
 
-`sdd-init`: Inicializa el entorno de desarrollo guiado por especificaciones.
+`/sdd-init`: Inicializa el entorno de desarrollo guiado por especificaciones.
 
-`sdd-explore`: Investiga ideas o la base de código antes de proponer cambios.
+`/sdd-explore`: Investiga ideas o la base de código antes de proponer cambios.
 
-`sdd-propose`: Crea propuestas con el alcance y enfoque de un cambio.
+`/sdd-propose`: Crea propuestas con el alcance y enfoque de un cambio.
 
-`sdd-spec`: Escribe especificaciones técnicas detalladas (historias de usuario, criterios de aceptación).
+`/sdd-spec`: Escribe especificaciones técnicas detalladas (historias de usuario, criterios de aceptación).
 
-`sdd-design`: Define la arquitectura y decisiones técnicas.
+`/sdd-design`: Define la arquitectura y decisiones técnicas.
 
-`sdd-tasks`: Desglosa el trabajo en una lista de tareas de implementación.
+`/sdd-tasks`: Desglosa el trabajo en una lista de tareas de implementación.
 
-`sdd-apply`: Ejecuta la implementación real del código.
+`/sdd-apply`: Ejecuta la implementación real del código.
 
-`sdd-verify`: Valida que la implementación cumpla con lo especificado.
+`/sdd-verify`: Valida que la implementación cumpla con lo especificado.
 
-`sdd-archive`: Consolida los cambios y archiva la tarea finalizada.
+`/sdd-archive`: Consolida los cambios y archiva la tarea finalizada.
 
 #### Gráfico de Dependencias
 ```
@@ -91,13 +134,13 @@ proposal -> specs --> tasks -> apply -> verify -> archive
 ### 3. El Registro de Skills (`.atl/skill-registry.md`)
 Es el mapa que los agentes consultan para saber qué herramientas tienen disponibles en cada momento.
 
-Se popula automáticamente.
+Se popula automáticamente con cada skill disponible.
 
 ---
 
 ## 🤝 Contribuyendo
 
-Si quieres añadir una nueva habilidad o mejorar un agente:
+Si querés añadir una nueva habilidad o mejorar un agente:
 1.  Crea una carpeta en el directorio correspondiente.
 2.  Define su comportamiento en un archivo `SKILL.md` o `AGENTS.md`.
 3.  Asegúrate de que incluya el YAML frontmatter con los `triggers` adecuados.
