@@ -58,6 +58,7 @@ Es nuestro estándar de calidad. El flujo de trabajo es:
 `Explorar` ➔ `Proponer` ➔ `Especificar` ➔ `Diseñar` ➔ `Implementar` ➔ `Verificar` ➔ `Archivar`.
 
 #### Uso de SDD:
+
 La Gestión de SDD se realiza invocando desde el prompt de esta manera:
 
 `sdd-init`: Inicializa el entorno de desarrollo guiado por especificaciones.
@@ -77,6 +78,15 @@ La Gestión de SDD se realiza invocando desde el prompt de esta manera:
 `sdd-verify`: Valida que la implementación cumpla con lo especificado.
 
 `sdd-archive`: Consolida los cambios y archiva la tarea finalizada.
+
+#### Gráfico de Dependencias
+```
+proposal -> specs --> tasks -> apply -> verify -> archive
+             ^
+             |
+           design
+```
+
 
 ### 3. El Registro de Skills (`.atl/skill-registry.md`)
 Es el mapa que los agentes consultan para saber qué herramientas tienen disponibles en cada momento.
