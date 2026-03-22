@@ -49,4 +49,34 @@ Las habilidades son unidades de conocimiento encapsulado que permiten a los agen
 4. **Persistencia:** Los resultados y descubrimientos se guardan directamente en el backend de archivos (**OpenSpec**) para asegurar que la "fuente de verdad" sea compartida entre fases.
 
 ---
+
+### Openspec para Antigravity
+
+**1. Copy skills:**
+
+```bash
+# Global (available across all projects)
+./scripts/install.sh  # Choose Antigravity option
+
+# Or manually (global)
+cp -r skills/sdd-* ~/.gemini/antigravity/skills/
+
+# Workspace-specific (per project)
+mkdir -p .agent/skills
+cp -r skills/sdd-* .agent/skills/
+```
+
+**2. Add orchestrator instructions:**
+
+Add the SDD orchestrator as a global rule in `~/.gemini/GEMINI.md`, or create a workspace rule in `.agent/rules/sdd-orchestrator.md`.
+
+See [`examples/antigravity/sdd-orchestrator.md`](examples/antigravity/sdd-orchestrator.md) for the rule content.
+
+**3. Verify:**
+
+Open Antigravity and type `/sdd-init` in the agent panel.
+
+> **Note:** Antigravity uses `.agent/skills/` and `.agent/rules/` for workspace config, and `~/.gemini/antigravity/skills/` for global. It does NOT use `.vscode/` paths.
+
+---
 *Built with Agent Teams Lite — Because building without a plan is just vibe coding with extra steps.*
