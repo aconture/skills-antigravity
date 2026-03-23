@@ -77,6 +77,12 @@ En la carpeta `.agent` se alojarán las definiciones.
 4. Configura el orquestador copiando su definición:
     - `Skill globales/rules/sdd-orchestrator.md` a `~.agent/rules/sdd-orchestrator.md`
 
+### Vericación de la configuración de SDD:
+
+Parado en el workspace de tu proyecto, abrir Antigravity y escribir `/sdd-init` en el panel del agente.
+
+> El agente comenzará a descubrir la estructura de tu proyecto, y la dejará documentada en el directorio `/openspec`.
+
 ### Skills específicas para un proyecto `Skill por proyecto/`
 ```
 <tu workspace>/
@@ -86,12 +92,20 @@ En la carpeta `.agent` se alojarán las definiciones.
     └── skills/
     ├── agents/             <- Skills específicas (no-SDD)
 ```
+2. Lueo de haber clonado este repositorio, copia las definiciones del comportamiento de cada skill. 
+    - Navega a tu directorio de root del workspace.
+    - Allí copia cada subdirectorio `Skill por proyecto/.agent/skills` que encuentras, dentro del directorio `~.agent/skills/`.
 
-5. Definiciones del comportamiento de cada skill. Navega a tu directorio de root del workspace.
-    - Allí copia cada subdirectorio `Skill por proyecto/.agent/skills` que encuentras dentro del directorio `~.agent/skills/`.
+### Vericación de la configuración de una skill:
+
+Parado en el workspace de tu proyecto, abrir Antigravity y escribir `/nombredelaskill` en el panel del agente.
+
+> El agente carga la skill y la ejecuta
 
 ---
-## 🧠 Conceptos Clave
+## 🧠 Conceptos Clave SDD
+
+Para más detalles navegar a [README.md](/Skill globales/SDD-Agents-Team [OPENSPEC]/README.md)
 
 ### 1. El Orquestador vs. Sub-Agentes
 El **Orquestador** (tú hablas con él) es un coordinador. No "ensucia" su memoria con detalles técnicos. Cuando necesita trabajar, delega la tarea a un **Sub-Agente** especializado que carga solo las **Skills** necesarias para esa tarea. Esto mantiene el contexto limpio y evita errores.

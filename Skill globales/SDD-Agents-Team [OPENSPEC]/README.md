@@ -1,12 +1,3 @@
-# skills-antigravity
-
-Se debe clonar este repositorio en el directorio ~.gemini\antigravity\skills de esta manera:
-parado en el directorio de .gemini:
-
-```powershell
-git glone https://github.com/aconture/skills-antigravity.git .
-```
-
 # 🤖 Arquitectura de Agentes y Gestión de Skills
 
 Este repositorio utiliza una arquitectura de **Spec-Driven Development (SDD)** basada en el patrón de orquestación de **Agent Teams Lite**, diseñada para maximizar la eficiencia del contexto y garantizar resultados deterministas a través de sub-agentes especializados.
@@ -21,14 +12,9 @@ Skills globales para usar en Antigravity. Almacenando en el path correcto, tambi
 Esquema de agentes SDD que son invocados como skills, adaptado de https://github.com/Gentleman-Programming/agent-teams-lite.git para usar estrictamente en Antigravity (si querés algo agnóstico, andá al repo de agent-teams-lite)
 
 ## Estructura de directorios:
-El archivo `~/sdd-examples/sdd-orchestrator.md` se debe copiar a `~/.gemini/GEMINI.md`, con esto Antigravity comenzará a reconocer el orquestador como una regla.
+Ver REDME.md de este repositorio
 
-Archivos de convenciones: `~/.gemini/antigravity/skills/_shared/` (global) o `.agent/skills/_shared/` (workspace) provee full reference documentation (sub-agents tienen sus propias instrucciones — archivos de convención son suplementarios):
-- `persistence-contract.md` for mode behavior and state persistence/recovery
-- `openspec-convention.md` for file layout when mode is `openspec`
-
-
-## 🧠 El Orquestador (`GEMINI.md` / `CLAUDE.md`)
+## 🧠 El Orquestador (`GEMINI.md` / `sdd-orchestrator.md`)
 El orquestador actúa como un **COORDINADOR**, no como un ejecutor. Su función principal es mantener un hilo de conversación ligero con el usuario y delegar todas las tareas técnicas (lectura/escritura de código, análisis, tests) a sub-agentes o fases basadas en skills.
 - **Regla de Oro:** Nunca realiza trabajo real inline para evitar el ruido cognitivo y la pérdida de estado por compactación de contexto.
 
@@ -50,33 +36,5 @@ Las habilidades son unidades de conocimiento encapsulado que permiten a los agen
 
 ---
 
-### Openspec para Antigravity
 
-**1. Copy skills:**
-
-```bash
-# Global (available across all projects)
-./scripts/install.sh  # Choose Antigravity option
-
-# Or manually (global)
-cp -r skills/sdd-* ~/.gemini/antigravity/skills/
-
-# Workspace-specific (per project)
-mkdir -p .agent/skills
-cp -r skills/sdd-* .agent/skills/
-```
-
-**2. Add orchestrator instructions:**
-
-Add the SDD orchestrator as a global rule in `~/.gemini/GEMINI.md`, or create a workspace rule in `.agent/rules/sdd-orchestrator.md`.
-
-See [`examples/antigravity/sdd-orchestrator.md`](examples/antigravity/sdd-orchestrator.md) for the rule content.
-
-**3. Verify:**
-
-Open Antigravity and type `/sdd-init` in the agent panel.
-
-> **Note:** Antigravity uses `.agent/skills/` and `.agent/rules/` for workspace config, and `~/.gemini/antigravity/skills/` for global. It does NOT use `.vscode/` paths.
-
----
 *Built with Agent Teams Lite — Because building without a plan is just vibe coding with extra steps.*
