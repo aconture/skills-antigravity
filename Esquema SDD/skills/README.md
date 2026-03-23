@@ -12,7 +12,7 @@ Skills globales para usar en Antigravity. Almacenando en el path correcto, tambi
 Esquema de agentes SDD que son invocados como skills, adaptado de https://github.com/Gentleman-Programming/agent-teams-lite.git para usar estrictamente en Antigravity (si querés algo agnóstico, andá al repo de agent-teams-lite)
 
 ## Estructura de directorios:
-Ver REDME.md de este repositorio
+Ver README.md de este repositorio
 
 ## 🧠 El Orquestador (`GEMINI.md` / `sdd-orchestrator.md`)
 El orquestador actúa como un **COORDINADOR**, no como un ejecutor. Su función principal es mantener un hilo de conversación ligero con el usuario y delegar todas las tareas técnicas (lectura/escritura de código, análisis, tests) a sub-agentes o fases basadas en skills.

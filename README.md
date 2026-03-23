@@ -25,7 +25,7 @@ Estas herramientas harán el coding más determinístico.
 
 | Directorio | Descripción |
 | :--- | :--- |
-| `Skill globales/` | Habilidades transversales aplicables a cualquier proyecto (como el núcleo de SDD). |
+| `Esquema SDD/` | Habilidades transversales aplicables a cualquier proyecto (como el núcleo de SDD). |
 | `Skills no-SDD/` | Habilidades declaradas para necesidades específicas. |
 | `.agent/` | Definiciones técnicas de agentes y reglas de comportamiento. |
 
@@ -39,7 +39,7 @@ Estas herramientas harán el coding más determinístico.
     ```powershell
     git clone https://github.com/aconture/skills-antigravity.git .
     ```
-### Agentes SDD con alcance Global (todos los workspace) `Skill globales/`:
+### Agentes SDD con alcance Global (todos los workspace) `Esquema SDD/`:
 #### En caso de que quieras tener el comportamiento SDD con alcance en **Todos tus Workspaces**
 
 ```
@@ -49,12 +49,12 @@ Estas herramientas harán el coding más determinístico.
 ```
 
 2.  Definiciones del comportamiento SDD. Navega a tu directorio de configuración de Antigravity (usualmente `~/.gemini/antigravity/skills`). 
-    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Skill globales/SDD-Agents-Team [OPENSPEC]`. 
+    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Esquema SDD/skills`. 
 
 3. Configura el orquestador copiando su definición:
-    - `Skill globales/rules/sdd-orchestrator.md` a `~/.gemini/GEMINI.md` 
+    - `Esquema SDD/rules/sdd-orchestrator.md` a `~/.gemini/GEMINI.md` 
 
-### Agentes SDD con alcance Local (workspace específico) `Skill globales/`:
+### Agentes SDD con alcance Local (workspace específico) `Esquema SDD/`:
 #### En caso de que quieras tener el comportamiento SDD sólo en un **Workspace Específico**
 En la carpeta `.agent` se alojarán las definiciones.
 
@@ -69,13 +69,13 @@ En la carpeta `.agent` se alojarán las definiciones.
 ```
 
 2. Definiciones del comportamiento SDD. Navega a tu directorio de root del workspace. 
-    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Skill globales/SDD-Agents-Team [OPENSPEC]`, al directorio `~.agent/skills/`
+    - Allí copia cada subdirectorio (`_shared`, `sdd-*` y `skill-*`) que encuentras dentro del directorio `Esquema SDD/skills`, al directorio `~.agent/skills/`
 
 3. Configura el índice de rules y skills copiando: 
-    - `Skill globales/AGENTS.md` al root del workspace `~/AGENTS.md`
+    - `Esquema SDD/AGENTS.md` al root del workspace `~/AGENTS.md`
 
 4. Configura el orquestador copiando su definición:
-    - `Skill globales/rules/sdd-orchestrator.md` a `~.agent/rules/sdd-orchestrator.md`
+    - `Esquema SDD/rules/sdd-orchestrator.md` a `~.agent/rules/sdd-orchestrator.md`
 
 ### Vericación de la configuración de SDD:
 
@@ -105,7 +105,7 @@ Parado en el workspace de tu proyecto, abrir Antigravity y escribir `/nombredela
 ---
 ## 🧠 Conceptos Clave SDD
 
-Para más detalles navegar a [README.md](/Skill globales/SDD-Agents-Team [OPENSPEC]/README.md)
+Para más detalles navegar a [README.md](/Esquema SDD/skills/README.md)
 
 ### 1. El Orquestador vs. Sub-Agentes
 El **Orquestador** (tú hablas con él) es un coordinador. No "ensucia" su memoria con detalles técnicos. Cuando necesita trabajar, delega la tarea a un **Sub-Agente** especializado que carga solo las **Skills** necesarias para esa tarea. Esto mantiene el contexto limpio y evita errores.
