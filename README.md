@@ -26,7 +26,7 @@ Estas herramientas harán el coding más determinístico.
 | Directorio | Descripción |
 | :--- | :--- |
 | `Skill globales/` | Habilidades transversales aplicables a cualquier proyecto (como el núcleo de SDD). |
-| `Skill por proyecto/` | Habilidades declaradas para necesidades específicas. |
+| `Skills no-SDD/` | Habilidades declaradas para necesidades específicas. |
 | `.agent/` | Definiciones técnicas de agentes y reglas de comportamiento. |
 
 ---
@@ -83,7 +83,7 @@ Parado en el workspace de tu proyecto, abrir Antigravity y escribir `/sdd-init` 
 
 > El agente comenzará a descubrir la estructura de tu proyecto, y la dejará documentada en el directorio `/openspec`.
 
-### Skills específicas para un proyecto `Skill por proyecto/`
+### Skills específicas para un proyecto `Skills no-SDD/`
 ```
 <tu workspace>/
 ├── AGENTS.md
@@ -94,7 +94,7 @@ Parado en el workspace de tu proyecto, abrir Antigravity y escribir `/sdd-init` 
 ```
 2. Lueo de haber clonado este repositorio, copia las definiciones del comportamiento de cada skill. 
     - Navega a tu directorio de root del workspace.
-    - Allí copia cada subdirectorio `Skill por proyecto/.agent/skills` que encuentras, dentro del directorio `~.agent/skills/`.
+    - Allí copia cada subdirectorio `Skills no-SDD/.agent/skills` que encuentras, dentro del directorio `~.agent/skills/`.
 
 ### Vericación de la configuración de una skill:
 
