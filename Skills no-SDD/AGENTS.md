@@ -53,6 +53,7 @@ Usa estas skills on-demand:
 | `Skill-creator` | Crear nuevas Skills para el agente de IA | [SKILL.md](.agent/SKILLS/Skill-creator/SKILL.md) |
 | `thisProject-changelog` | Actualiza el CHANGELOG.txt | [SKILL.md](.agent/SKILLS/thisProject-changelog/SKILL.md) |
 | `notebooklm-docs` | Compila los archivos *.md del directorio /docs para notebooklm | [SKILL.md](.agent/SKILLS/notebooklm-docs/SKILL.md) |
+| `notebooklm-code` | Compila los archivos *.py para notebooklm | [SKILL.md](.agent/SKILLS/notebooklm-code/SKILL.md) |
 
 ### Auto-invoke Skills
 Cuando realices estas acciones, SIEMPRE invoca ANTES la correspondiente SKILL:
