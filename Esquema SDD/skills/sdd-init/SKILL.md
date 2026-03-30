@@ -1,143 +1,144 @@
 ---
 name: sdd-init
 description: >
-  Initialize Spec-Driven Development context in any project. Detects stack, conventions, and bootstraps the active persistence backend.
-  Trigger: When user wants to initialize SDD in a project, or says "sdd init", "iniciar sdd", "openspec init".
+  Inicializa el contexto Spec-Driven Development (SDD) en cualquier proyecto. Detecta el stack técnico, las convenciones y arranca el backend de persistencia activo.
+  Trigger: Cuando el usuario quiera inicializar SDD en un proyecto, o diga "sdd init", "iniciar sdd", "openspec init".
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
   version: "2.0"
 ---
 
-## Purpose
+## Propósito
 
-You are a sub-agent responsible for initializing the Spec-Driven Development (SDD) context in a project. You detect the project stack and conventions, then bootstrap the active persistence backend.
+Eres un subagente responsable de inicializar el contexto de Spec-Driven Development (SDD) en un proyecto. Debe detectar el stack tecnológico y las convenciones del proyecto, y luego arrancar el backend de persistencia activo.
 
-## Execution and Persistence Contract
+## Contrato de Ejecución y Persistencia
 
-Read and follow `skills/_shared/persistence-contract.md` for mode resolution rules.
+Lee y sigue `skills/_shared/persistence-contract.md` para aplicar el modo y las reglas de resolución.
 
-- If mode is `openspec`: Read and follow `skills/_shared/openspec-convention.md`. Run full bootstrap.
-- If mode is `none`: Return detected context without writing project files.
+- Si el modo es `openspec`: Lee y sigue `skills/_shared/openspec-convention.md`. Ejecuta un arranque full.
+- Si el modo es `none`: Devuelve el contexto detectado sin escribir archivos del proyecto.
 
-## What to Do
+## Qué hacer
 
-### Step 1: Detect Project Context
+### Paso 1: Detecta el Contexto del Proyecto
 
-Read the project to understand:
-- Tech stack (check package.json, go.mod, pyproject.toml, etc.)
-- Existing conventions (linters, test frameworks, CI)
-- Architecture patterns in use
+Lee el proyecto para entender:
+- Stack tecnológico (check package.json, go.mod, pyproject.toml, etc.)
+- Convenciones existentes (linters, test frameworks, CI)
+- Patrones de arquitectura en uso
 
-### Step 2: Initialize Persistence Backend
+### Paso 2: Inicializa el Backend de Persistencia
 
-If mode resolves to `openspec`, create this directory structure:
+Si el modo es `openspec`, crea esta estructura de directorios:
 
 ```
 openspec/
-├── config.yaml              ← Project-specific SDD config
-├── specs/                   ← Source of truth (empty initially)
-└── changes/                 ← Active changes
-    └── archive/             ← Completed changes
+├── config.yaml              ← Configuración SDD específica del proyecto
+├── specs/                   ← Fuente de verdad (vacío inicialmente)
+└── changes/                 ← Cambios activos
+    └── archive/             ← Cambios completados
 ```
 
-### Step 3: Generate Config (openspec mode)
+### Paso 3: Genera Config (openspec mode)
 
-Based on what you detected, create the config when in `openspec` mode:
+Basado en lo que has detectado, la configuración en modo `openspec`:
 
 ```yaml
 # openspec/config.yaml
 schema: spec-driven
 
-context: |
-  Tech stack: {detected stack}
-  Architecture: {detected patterns}
+contexto: |
+  Stack Tecnológico: {detected stack}
+  Arquitectura: {detected patterns}
   Testing: {detected test framework}
-  Style: {detected linting/formatting}
+  Estilo: {detected linting/formatting}
 
-rules:
+reglas:
   proposal:
-    - Include rollback plan for risky changes
-    - Identify affected modules/packages
+    - Incluye un plan de rollback para los cambios riesgosos
+    - Identifica los módulos/packages afectados
   specs:
-    - Use Given/When/Then format for scenarios
-    - Use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY)
+    - Usa el formato Dado/Cuando/Entonces para los escenarios
+    - Usa las palabras clave de RFC 2119 (MUST, SHALL, SHOULD, MAY)
   design:
-    - Include sequence diagrams for complex flows
-    - Document architecture decisions with rationale
+    - Incluye diagramas de secuencia para flujos complejos
+    - Documenta decisiones de arquitectura con su racional
   tasks:
-    - Group tasks by phase (infrastructure, implementation, testing)
-    - Use hierarchical numbering (1.1, 1.2, etc.)
-    - Keep tasks small enough to complete in one session
+    - Agrupa las tareas por fase (infraestructura, implementación, testing)
+    - Usa numeración jerárquica (1.1, 1.2, etc.)
+    - Mantiene las tareas lo suficientemente pequeñas como para completarlas en una sesión
   apply:
-    - Follow existing code patterns and conventions
-    - Load relevant coding skills for the project stack
+    - Sigue patrones y convenciones del código existente
+    - Carga las skills relevantes para el stack del proyecto
   verify:
-    - Run tests if test infrastructure exists
-    - Compare implementation against every spec scenario
+    - Ejecuta tests si la infraestructura de test existe
+    - Compara la implementación contra cada escenario de la espec
   archive:
-    - Warn before merging destructive deltas (large removals)
+    - Advierte antes de mergear deltas destructivos (eliminaciones largas)
 ```
 
-### Step 4: Build Skill Registry
+### PAso 4: Construye el Registro de Skill
 
-Follow the same logic as the `skill-registry` skill (`skills/skill-registry/SKILL.md`):
+Sigue la misma lógica que la skill `skill-registry` (`skills/skill-registry/SKILL.md`):
 
-1. You MUST Scan user skills, EVERY time /sdd-init runs: glob `*/SKILL.md` across ALL known skill directories. **User-level**: `~/.gemini/skills/`, parent of this skill file. **Project-level**: `.gemini/skills/`, `.agent/skills/`, `skills/`. Skip `sdd-*`, `_shared`, `skill-registry`. Deduplicate by name (project-level wins). Read frontmatter triggers.
-2. Scan project conventions: check for `agents.md`, `AGENTS.md`, (project-level), `GEMINI.md`, in the project root. If an index file is found (e.g., `agents.md`), READ it and extract all referenced file paths — include both the index and its referenced files in the registry.
-3. **ALWAYS write `.atl/skill-registry.md`** in the project root (create `.atl/` if needed). This file is mode-independent — it's infrastructure, not an SDD artifact.
+1. DEBES escanear las skills de usuario CADA vez que se ejecuta /sdd-init: 
+1. DEBES escanear las skills de usuario, CADA vez que se ejecuta /sdd-init: realiza un glob `*/SKILL.md` en TODOS los directorios de skills conocidos. **User-level**: `~/.gemini/skills/`, parent of this skill file. **Project-level**: `.gemini/skills/`, `.agent/skills/`, `skills/`. Skip `sdd-*`, `_shared`, `skill-registry`. Deduplicate by name (project-level wins). Read frontmatter triggers.
+2. Escanea las convenciones del proyecto: chequea `agents.md`, `AGENTS.md`, (project-level), `GEMINI.md`, en el root del proyecto. Si encuentras un archivo índice (e.g., `agents.md`), LEELO y extrae todos los path referenciados — incluye ambos el índice y sus archivos referenciados en el registro.
+3. **SIEMPRE escribe `.atl/skill-registry.md`** en el raiz del proyecto (crea `.atl/` si es necesario). Este archivo es independiente del modo — Es infraestructura, no un artefacto SDD.
 
-See `skills/skill-registry/SKILL.md` for the full registry format and scanning details.
+Mira `skills/skill-registry/SKILL.md` para el formato de la full registración y los detalles del escaneo.
 
-### Step 5: Persist Project Context
+### Paso 5: Persiste el Contexto del Proyecto
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es MANDATORIO — NO lo saltees.**
 
-If mode is `openspec`: the config was already written in Step 3.
+Si modo es `openspec`: la configuración ya se escribió en el Paso 3.
 
-### Step 6: Return Summary
+### Paso 6: Resumen de la Respuesta
 
-Return a structured summary adapted to the resolved mode:
+Devuelve un resumen estructurado adaptado al modo resuelto:
 
-#### If mode is `openspec`:
+#### Si modo es `openspec`:
 ```
-## SDD Initialized
+## SDD Initializado
 
-**Project**: {project name}
+**Proyecto**: {project name}
 **Stack**: {detected stack}
-**Persistence**: openspec
+**Persistencia**: openspec
 
-### Structure Created
-- openspec/config.yaml ← Project config with detected context
-- openspec/specs/      ← Ready for specifications
-- openspec/changes/    ← Ready for change proposals
+### Estructura Creada
+- openspec/config.yaml ← Configuración del proyecto con el contexto detectado
+- openspec/specs/      ← Listo para las especificaciones
+- openspec/changes/    ← Listo para las propuestas de cambio
 
-### Next Steps
-Ready for /sdd-explore <topic> or /sdd-new <change-name>.
+### Próximos pasos
+Listo para /sdd-explore <topic> o /sdd-new <nombre-del-cambio>.
 ```
 
-#### If mode is `none`:
+#### Si modo es `none`:
 ```
-## SDD Initialized
+## SDD Initializado
 
-**Project**: {project name}
+**Proyecto**: {project name}
 **Stack**: {detected stack}
-**Persistence**: none (ephemeral)
+**Persistencia**: none (ephemeral)
 
-### Context Detected
-{summary of detected stack and conventions}
+### Contexto Detectado
+{resumen del stack y las convenciones detectadas}
 
-### Recommendation
-Enable `openspec` for artifact persistence across sessions. Without persistence, all SDD artifacts will be lost when the conversation ends.
+### Recommendaciones
+Habilita `openspec` para la persistencia de artefactos a lo largo de las sesiones. Sin persistencia, todos los artefactos SDD se perderán cuando la conversación finaliza.
 
-### Next Steps
-Ready for /sdd-explore <topic> or /sdd-new <change-name>.
+### Próximos Pasos
+Listo para /sdd-explore <topic> o /sdd-new <nombre-del-cambio>. 
 ```
 
-## Rules
+## Reglas
 
-- NEVER create placeholder spec files - specs are created via sdd-spec during a change
-- ALWAYS detect the real tech stack, don't guess
-- If the project already has an `openspec/` directory, report what exists and ask the orchestrator if it should be updated
-- Keep config.yaml context CONCISE - no more than 10 lines
-- Return a structured envelope with: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
+- NUNCA crees archivos de especificación temporales (placeholders) — las especificaciones se crean mediante sdd-spec durante un cambio
+- SIEMPRE detecta el stack tecnológico real, no supongas
+- Si el proyecto ya tiene un directorio `openspec/`, reporta su existencia y consulta al orquestador si debe ser actualizado
+- Mantiene el contexto de config.yaml CONCISO - no más de 10 líneas
+- Devuelve una envolvente estructurada con: `status`, `resumen_ejecutivo`, `reporte_detallado` (opcional), `artefactos`, `prox_recomendacion`, y `riesgos`
