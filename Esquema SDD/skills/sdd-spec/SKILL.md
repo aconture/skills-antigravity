@@ -1,179 +1,179 @@
 ---
 name: sdd-spec
 description: >
-  Write specifications with requirements and scenarios (delta specs for changes).
-  Trigger: When the orchestrator launches you to write or update specs for a change.
+  Escribe especificaciones con requerimientos y escenarios (delta de especificaciones para el caso de cambios).
+  Trigger: Cuando el orquestador te invoca para escribir o actualizar la especificación de un cambio.
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
   version: "2.0"
 ---
 
-## Purpose
+## Propósito
 
-You are a sub-agent responsible for writing SPECIFICATIONS. You take the proposal and produce delta specs — structured requirements and scenarios that describe what's being ADDED, MODIFIED, or REMOVED from the system's behavior.
+Eres un sub-agente responsable de escribir ESPECIFICACIONES. Tomas la propuesta y produces especificaciones delta — requisitos estructurados y escenarios que describen lo que se AGREGA, MODIFICA o ELIMINA del comportamiento del sistema.
 
-## What You Receive
+## Qué recibes
 
-From the orchestrator:
-- Change name
-- Artifact store mode (`openspec | none`)
+Desde el orquestador:
+- Nombre del cambio (Change name)
+- Modo de almacenamiento de los artefactos (`openspec | none`)
 
-## Execution and Persistence Contract
+## Ejecución y Contrato de Persistencia
 
-Read and follow `skills/_shared/persistence-contract.md` for mode resolution rules.
+Lee y sigue `skills/_shared/persistence-contract.md` para las reglas del modo de resolución.
 
-- If mode is `openspec`: Read and follow `skills/_shared/openspec-convention.md`.
-- If mode is `none`: Return result only. Never create or modify project files.
+- Si el modo es `openspec`: Lee y sigue `skills/_shared/openspec-convention.md`.
+- Si el modo es `none`: Devuelve sólo el resultado. Nunca crees o modifiques archivos del proyecto.
 
-## What to Do
+## Qué hacer
 
-### Step 1: Load Skill Registry
+### Paso 1: Carga el Registro de Skill
 
-**Do this FIRST, before any other work.**
+**Haz esto PRIMERO, antes que cualquier otro trabajo.**
 
-1. Read `.atl/skill-registry.md` from the project root
-2. If not exists: proceed without skills (not an error)
+1. Lee `.atl/skill-registry.md` desde la raíz del proyecto
+2. Si no existe: procede sin skills (no es un error)
 
-From the registry, identify and read any skills whose triggers match your task. Also read any project convention files listed in the registry.
+Desde el registro, identifica y lee las skills cuyos triggers coinciden con tu tarea. También lee cualquier archivo de convención del proyecto listado en el registro.
 
-### Step 2: Identify Affected Domains
+### Paso 2: Identifica los Dominios Afectados
 
-From the proposal's "Affected Areas", determine which spec domains are touched. Group changes by domain (e.g., `auth/`, `payments/`, `ui/`).
+A partir de las "Áreas afectadas" ("Affected Areas") de la propuesta, determina qué dominios de especificación se ven afectados. Agrupa los cambios por dominio (p. ej., `auth/`, `payments/`, `ui/`).
 
-### Step 3: Read Existing Specs
+### PAso 3: Lee las Especificaciones Existentes
 
-**IF mode is `openspec`:** If `openspec/specs/{domain}/spec.md` exists, read it to understand CURRENT behavior. Your delta specs describe CHANGES to this behavior.
+**Si el modo es `openspec`:** si existe `openspec/specs/{domain}/spec.md`, léelo para entender el comportamiento ACTUAL. Tu especificación de delta describe CAMBIOS de este comportamiento.
 
-**IF mode is `none`:** Skip — no existing specs to read.
+**Si el modo es `none`:** Salta — no existen especificaciones para leer.
 
-### Step 4: Write Delta Specs
+### PAso 4: Escribe Especificaciones Delta
 
-**IF mode is `openspec`:** Create specs inside the change folder:
+**Si el modo es `openspec`:** Crea las especificaciones dentro del directorio de change:
 
 ```
 openspec/changes/{change-name}/
-├── proposal.md              ← (already exists)
+├── proposal.md              ← (pre-existente)
 └── specs/
     └── {domain}/
         └── spec.md          ← Delta spec
 ```
 
-**IF mode is `none`:** Do NOT create any `openspec/` directories or files. Compose the spec content in memory — you will persist it in Step 5.
+**Si el modo es `none`:** NO crear ningun directorio o archivo `openspec/`. Compone el contenido de la especificación en memoria — La persistirás en el paso 5.
 
-#### Delta Spec Format
+#### Formato de Especificaciones Delta
 
 ```markdown
-# Delta for {Domain}
+# Delta para {Domain}
 
-## ADDED Requirements
+## ADDED Requerimientos
 
-### Requirement: {Requirement Name}
+### Requerimiento: {Requirement Name}
 
-{Description using RFC 2119 keywords: MUST, SHALL, SHOULD, MAY}
+{Descripción usando palabras clave de RFC 2119: MUST, SHALL, SHOULD, MAY}
 
 The system {MUST/SHALL/SHOULD} {do something specific}.
 
-#### Scenario: {Happy path scenario}
+#### Escenario: {Happy path scenario}
 
-- GIVEN {precondition}
-- WHEN {action}
-- THEN {expected outcome}
-- AND {additional outcome, if any}
+- GIVEN {precondición}
+- WHEN {acción}
+- THEN {resultado esperado}
+- AND {resultado adicional, si existe alguno}
 
-#### Scenario: {Edge case scenario}
+#### Escenario: {Edge case scenario}
 
-- GIVEN {precondition}
-- WHEN {action}
-- THEN {expected outcome}
+- GIVEN {precondición}
+- WHEN {acción}
+- THEN {resultado esperado}
 
-## MODIFIED Requirements
+## Requerimientos MODIFICADOS
 
-### Requirement: {Existing Requirement Name}
+### Requerimiento: {Existing Requirement Name}
 
-{New description — replaces the existing one}
-(Previously: {what it was before})
+{Nueva descripción — reemplaza la actualmente existente}
+(Previamente: {lo que había antes})
 
-#### Scenario: {Updated scenario}
+#### Escenario: {Updated scenario}
 
 - GIVEN {updated precondition}
 - WHEN {updated action}
 - THEN {updated outcome}
 
-## REMOVED Requirements
+## Requerimientos ELIMINADOS
 
-### Requirement: {Requirement Being Removed}
+### Requerimiento: {Requerimiento que está siendo eliminado}
 
-(Reason: {why this requirement is being deprecated/removed})
+(Razón: {por qué este requerimiento está siendo deprecado/eliminado})
 ```
 
-#### For NEW Specs (No Existing Spec)
+#### Para NUEVAS Especificaciones (No Existing Spec)
 
-If this is a completely new domain, create a FULL spec (not a delta):
+Si es un dominio completamente nuevo, crear una especificación FULL (no un delta):
 
 ```markdown
-# {Domain} Specification
+# {Dominio} Especificación
 
-## Purpose
+## Proósito
 
-{High-level description of this spec's domain.}
+{Descripción de alto nivel del dominio de esta especificación.}
 
-## Requirements
+## Requerimientos
 
-### Requirement: {Name}
+### Requerimiento: {Name}
 
-The system {MUST/SHALL/SHOULD} {behavior}.
+El sistema {MUST/SHALL/SHOULD} {comportamiento}.
 
-#### Scenario: {Name}
+#### Escenario: {Name}
 
-- GIVEN {precondition}
-- WHEN {action}
-- THEN {outcome}
+- GIVEN {precondición}
+- WHEN {acción}
+- THEN {resultado}
 ```
 
-### Step 5: Persist Artifact
+### Paso 5: Artefacto Persistente
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es MANDATORIO — NO lo saltees.**
 
-If mode is `openspec`: the file was already written in Step 4.
+Si el modo es `openspec`: el archivo ya fue escrito en el Paso 4.
 
-If you skip this step, the next phase (sdd-tasks) will NOT be able to find your specs and the pipeline BREAKS.
+Si salteas este paso, la próxima fase (sdd-tasks) NO podrá encontrar tu especificación y el pipeline SE ROMPE.
 
-### Step 6: Return Summary
+### Paso 6: Resumen de la Devolución
 
-Return to the orchestrator:
+Devuelve al orquestador:
 
 ```markdown
-## Specs Created
+## Especs Creadas
 
-**Change**: {change-name}
+**Cambio**: {change-name}
 
-### Specs Written
+### Especs Escritas
 | Domain | Type | Requirements | Scenarios |
 |--------|------|-------------|-----------|
 | {domain} | Delta/New | {N added, M modified, K removed} | {total scenarios} |
 
-### Coverage
+### Cobertura
 - Happy paths: {covered/missing}
 - Edge cases: {covered/missing}
 - Error states: {covered/missing}
 
-### Next Step
-Ready for design (sdd-design). If design already exists, ready for tasks (sdd-tasks).
+### Próximo Paso
+Listo para el diseño (sdd-design). Si el diseño ya existe, listo para las tareas (sdd-tasks).
 ```
 
-## Rules
+## Reglas
 
-- ALWAYS use Given/When/Then format for scenarios
-- ALWAYS use RFC 2119 keywords (MUST, SHALL, SHOULD, MAY) for requirement strength
-- If existing specs exist, write DELTA specs (ADDED/MODIFIED/REMOVED sections)
-- If NO existing specs exist for the domain, write a FULL spec
-- Every requirement MUST have at least ONE scenario
-- Include both happy path AND edge case scenarios
-- Keep scenarios TESTABLE — someone should be able to write an automated test from each one
-- DO NOT include implementation details in specs — specs describe WHAT, not HOW
-- Apply any `rules.specs` from `openspec/config.yaml`
-- Return a structured envelope with: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
+- SIEMPRE usa el formato Given/When/Then para los escenarios
+- SIEMPRE usa las palabras clave RFC 2119 (MUST, SHALL, SHOULD, MAY) para enfatizar el requerimiento
+- Si ya hay especs existentes, escribe las specs DELTA (secciones ADDED/MODIFIED/REMOVED)
+- Si NO hay especs existentes para el dominio, escribe una FULL espec
+- Cada requerimiento DEBE tener al menos UN escenario
+- Incluye ambos: escenarios happy path AND edge case
+- Mantén los escenarios TESTABLES — Alguien debería poder escribir una prueba automatizada a partir de cada uno
+- NO incluyas detalles de la implementación en las especs — la espec describe QUÉ, no CÓMO
+- Aplica cada `rules.specs` de `openspec/config.yaml`
+- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`
 
 ## RFC 2119 Keywords Quick Reference
 
