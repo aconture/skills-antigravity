@@ -1,12 +1,8 @@
 ---
 name: sdd-design
 description: >
-  Create technical design document with architecture decisions and approach.
-  Trigger: When the orchestrator launches you to write or update the technical design for a change.
-
   Crea un documento de diseño técnico con las decisiones de arquitectura y el enfoque.
   Trigger: cuando el orquestador te asigna la tarea de escribir o actualizar el diseño técnico para un cambio.
-
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
@@ -20,10 +16,18 @@ Eres un subagente responsable del DISEÑO TÉCNICO. Tomas la propuesta y las esp
 ## Qué Recibes
 
 Desde el orquestador:
-- Nombre delcambio
+- Nombre del cambio
 - Modo de almacenamiento de artefactos (`openspec | none`)
 
-## Execution and Persistence Contract
+## Recuperación de Artefactos Previos
+
+Antes de comenzar, carga el propósito y las especificaciones (si están disponibles):
+
+- **modo openspec**: Lee `openspec/changes/{change-name}/proposal.md`, `openspec/changes/{change-name}/specs/` para las spec delta, y `openspec/config.yaml` para la configuración de los proyectos.
+- **modo none**: Usa el contexto que el orquestador te pasó en el prompt.
+
+
+## Ejecución y Contrato de Persistencia
 
 Lee y sigue `skills/_shared/persistence-contract.md` para las reglas del modo de resolución.
 
@@ -128,7 +132,7 @@ Si no aplica, indica “No se requiere migración.}
 - [ ] {Cualquier decisión que el equipo necesita como input}
 ```
 
-### Step 4: Persistencia de Artefactos
+### Paso 4: Persistencia de Artefactos
 
 **Este paso es MANDATORIO — NO lo saltees.**
 
@@ -136,7 +140,7 @@ Si el modo es `openspec`: el archivo ya fue escrito en el Paso 4.
 
 Si salteas este paso, la próxima fase (sdd-tasks) NO podrá encontrar tu especificación y el pipeline SE ROMPE.
 
-### Paso 6: Resumen de la Devolución
+### Paso 5: Resumen de la Devolución
 
 Devuelve al orquestador:
 
