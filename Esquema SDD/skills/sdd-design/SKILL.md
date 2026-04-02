@@ -3,108 +3,113 @@ name: sdd-design
 description: >
   Create technical design document with architecture decisions and approach.
   Trigger: When the orchestrator launches you to write or update the technical design for a change.
+
+  Crea un documento de diseño técnico con las decisiones de arquitectura y el enfoque.
+  Trigger: cuando el orquestador te asigna la tarea de escribir o actualizar el diseño técnico para un cambio.
+
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
   version: "2.0"
 ---
 
-## Purpose
+## Propósito
 
-You are a sub-agent responsible for TECHNICAL DESIGN. You take the proposal and specs, then produce a `design.md` that captures HOW the change will be implemented — architecture decisions, data flow, file changes, and technical rationale.
+Eres un subagente responsable del DISEÑO TÉCNICO. Tomas la propuesta y las especificaciones, y luego produces un `design.md` que capture CÓMO se implementará el cambio — decisiones de arquitectura, flujo de datos, cambios en archivos y la justificación técnica.
 
-## What You Receive
+## Qué Recibes
 
-From the orchestrator:
-- Change name
-- Artifact store mode (`openspec | none`)
+Desde el orquestador:
+- Nombre delcambio
+- Modo de almacenamiento de artefactos (`openspec | none`)
 
 ## Execution and Persistence Contract
 
-Read and follow `skills/_shared/persistence-contract.md` for mode resolution rules.
+Lee y sigue `skills/_shared/persistence-contract.md` para las reglas del modo de resolución.
 
-- If mode is `openspec`: Read and follow `skills/_shared/openspec-convention.md`.
-- If mode is `none`: Return result only. Never create or modify project files.
+- Si el modo es `openspec`: Lee y sigue `skills/_shared/openspec-convention.md`.
+- Si el modo es `none`: Devuelve sólo el resultado. Nunca crees o modifiques archivos del proyecto.
 
-## What to Do
+## Qué hacer
 
-### Step 1: Load Skill Registry
+### Paso 1: Carga el Registro de Skill
 
-**Do this FIRST, before any other work.**
+**Haz esto PRIMERO, antes que cualquier otro trabajo.**
 
-2. Read `.atl/skill-registry.md` from the project root
-3. If not exists: proceed without skills (not an error)
+1. Lee `.atl/skill-registry.md` desde la raíz del proyecto
+2. Si no existe: procede sin skills (no es un error)
 
-From the registry, identify and read any skills whose triggers match your task. Also read any project convention files listed in the registry.
+Desde el registro, identifica y lee las skills cuyos triggers coinciden con tu tarea. También lee cualquier archivo de convención del proyecto listado en el registro.
 
-### Step 2: Read the Codebase
+### Paso 2: Lee la Base de Código
 
-Before designing, read the actual code that will be affected:
-- Entry points and module structure
-- Existing patterns and conventions
-- Dependencies and interfaces
-- Test infrastructure (if any)
+Antes de diseñar, lee el código real que será afectado:
 
-### Step 3: Write design.md
+- Puntos de entrada y estructura de módulos
+- Patrones y convenciones existentes
+- Dependencias e interfaces
+- Infraestructura de tests (si existe)
 
-**IF mode is `openspec`:** Create the design document:
+### Paso 3: Escribe design.md
+
+**Si el modo es `openspec`:** Crea el documento de diseño:
 
 ```
 openspec/changes/{change-name}/
 ├── proposal.md
 ├── specs/
-└── design.md              ← You create this
+└── design.md              ← Creas este documento
 ```
 
-**IF mode is `none`:** Do NOT create any `openspec/` directories or files. Compose the design content in memory — you will persist it in Step 4.
+**Si el modo es `none`:** NO crear ningún directorio o archivo en `openspec/`. Compone el contenido de la especificación en memoria — La persistirás en el paso 4.
 
-#### Design Document Format
+#### Formato del Documento de Diseño
 
 ```markdown
-# Design: {Change Title}
+# Diseño: {Título del Nombre}
 
-## Technical Approach
+## Enfoque Técnico
 
-{Concise description of the overall technical strategy.
-How does this map to the proposal's approach? Reference specs.}
+{Descripción concisa de la estrategia técnica general.
+¿Cómo se mapea esto con el enfoque de la propuesta? Referenciar las especificaciones.}
 
-## Architecture Decisions
+## Decisiones de Arquitectura
 
-### Decision: {Decision Title}
+### Decisiones: {Título de la Decisión}
 
-**Choice**: {What we chose}
-**Alternatives considered**: {What we rejected}
-**Rationale**: {Why this choice over alternatives}
+**Elección**: {Qué elegimos}
+**Alternativas consideradas**: {Qué descartamos}
+**Racional**: {Por qué la elección respecto del resto de alternativas}
 
-### Decision: {Decision Title}
+### Decision: {Título de la Decisión}
 
-**Choice**: {What we chose}
-**Alternatives considered**: {What we rejected}
-**Rationale**: {Why this choice over alternatives}
+**Elección**: {Qué elegimos}
+**Alternativas consideradas**: {Qué descartamos}
+**Racional**: {Por qué la elección respecto del resto de alternativas}
 
-## Data Flow
+## Flujo de Datos
 
-{Describe how data moves through the system for this change.
-Use ASCII diagrams when helpful.}
+{Describe cómo los datos se mueven a través del sistema para este cambio.
+Utiliza diagramas ASCII cuando sea útil.}
 
-    Component A ──→ Component B ──→ Component C
+    Componente A ──→ Componente B ──→ Componente C
          │                              │
-         └──────── Store ───────────────┘
+         └──────── Almacenamiento ──────┘
 
-## File Changes
+## Cambios en Archivos
 
 | File | Action | Description |
 |------|--------|-------------|
-| `path/to/new-file.ext` | Create | {What this file does} |
-| `path/to/existing.ext` | Modify | {What changes and why} |
-| `path/to/old-file.ext` | Delete | {Why it's being removed} |
+| `path/to/new-file.ext` | Create | {Qué hace este archivo} |
+| `path/to/existing.ext` | Modify | {Qué cambia y porqué} |
+| `path/to/old-file.ext` | Delete | {Por qué está siendo eliminado} |
 
-## Interfaces / Contracts
+## Interfaces / Contratos
 
-{Define any new interfaces, API contracts, type definitions, or data structures.
-Use code blocks with the project's language.}
+{Define cualquier interfaz nueva, contratos de API, definiciones de tipos o estructuras de datos.
+Usa bloques de código con el lenguaje del proyecto.}
 
-## Testing Strategy
+## Estrategia de Testing
 
 | Layer | What to Test | Approach |
 |-------|-------------|----------|
@@ -112,56 +117,56 @@ Use code blocks with the project's language.}
 | Integration | {What} | {How} |
 | E2E | {What} | {How} |
 
-## Migration / Rollout
+## Migración / Despliegue
 
-{If this change requires data migration, feature flags, or phased rollout, describe the plan.
-If not applicable, state "No migration required."}
+{Si este cambio requiere migración de datos, feature flags o un despliegue por fases, describe el plan.
+Si no aplica, indica “No se requiere migración.}
 
-## Open Questions
+## Preguntas Abiertas
 
-- [ ] {Any unresolved technical question}
-- [ ] {Any decision that needs team input}
+- [ ] {Cualquier pregunta técnica no resuelta}
+- [ ] {Cualquier decisión que el equipo necesita como input}
 ```
 
-### Step 4: Persist Artifact
+### Step 4: Persistencia de Artefactos
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es MANDATORIO — NO lo saltees.**
 
-If mode is `openspec`: the file was already written in Step 3.
+Si el modo es `openspec`: el archivo ya fue escrito en el Paso 4.
 
-If you skip this step, the next phase (sdd-tasks) will NOT be able to find your design and the pipeline BREAKS.
+Si salteas este paso, la próxima fase (sdd-tasks) NO podrá encontrar tu especificación y el pipeline SE ROMPE.
 
-### Step 5: Return Summary
+### Paso 6: Resumen de la Devolución
 
-Return to the orchestrator:
+Devuelve al orquestador:
 
 ```markdown
-## Design Created
+## Diseño Creado
 
-**Change**: {change-name}
-**Location**: `openspec/changes/{change-name}/design.md` (openspec) | inline (none)
+**Cambio**: {change-name}
+**Ubicación**: `openspec/changes/{change-name}/design.md` (openspec) | inline (none)
 
-### Summary
-- **Approach**: {one-line technical approach}
-- **Key Decisions**: {N decisions documented}
-- **Files Affected**: {N new, M modified, K deleted}
-- **Testing Strategy**: {unit/integration/e2e coverage planned}
+### Resumen
+- **Enfoque**: {enfoque técnico en una línea}
+- **Decisiones Claves**: {N decisiones documentadas}
+- **Archivos Afectados**: {N nuevos, M modificados, K eliminados}
+- **Estrategia de Testing**: {unit/integration/e2e coverage planned}
 
-### Open Questions
-{List any unresolved questions, or "None"}
+## Preguntas Abiertas
+{Lista cualquier pregunta no resuelta, o "None"}
 
-### Next Step
-Ready for tasks (sdd-tasks).
+### Próximo paso
+Listo para Tareas (sdd-tasks).
 ```
 
-## Rules
+## Reglas
 
-- ALWAYS read the actual codebase before designing — never guess
-- Every decision MUST have a rationale (the "why")
-- Include concrete file paths, not abstract descriptions
-- Use the project's ACTUAL patterns and conventions, not generic best practices
-- If you find the codebase uses a pattern different from what you'd recommend, note it but FOLLOW the existing pattern unless the change specifically addresses it
-- Keep ASCII diagrams simple — clarity over beauty
-- Apply any `rules.design` from `openspec/config.yaml`
-- If you have open questions that BLOCK the design, say so clearly — don't guess
-- Return a structured envelope with: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
+- SIEMPRE lee el código base real antes de diseñar — nunca supongas
+- Cada decisión DEBE tener asociado un racional (el "porqué")
+- Incluye rutas de archivos concretas, no descripciones abstractas
+- Usa los patrones y convenciones REALES del proyecto, no buenas prácticas genéricas.
+- Si encuentras que el codebase usa un patrón diferente al que recomendarías, déjalo asentado, pero SIGUE el patrón existente a menos que el cambio lo aborde específicamente
+- Mantén los diagramas ASCII simples — la claridad es más importante que la estética
+- Aplica cualquier `rules.design` de `openspec/config.yaml`
+- Si tienes preguntas abiertas que BLOQUEAN el diseño, dilo claramente — no hagas suposiciones
+- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`

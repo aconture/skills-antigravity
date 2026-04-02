@@ -131,7 +131,7 @@ El sistema {MUST/SHALL/SHOULD} {comportamiento}.
 - THEN {resultado}
 ```
 
-### Paso 5: Artefacto Persistente
+### Paso 5: Persistencia de Artefactos
 
 **Este paso es MANDATORIO — NO lo saltees.**
 
