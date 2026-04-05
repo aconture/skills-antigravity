@@ -1,147 +1,147 @@
 ---
 name: sdd-propose
 description: >
-  Create a change proposal with intent, scope, and approach.
-  Trigger: When the orchestrator launches you to create or update a proposal for a change.
+  Crea una propuesta de cambio con intención, alcance y enfoque.
+  Trigger: cuando el orquestador te inicia para crear o actualizar una propuesta para un cambio.
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
   version: "2.0"
 ---
 
-## Purpose
+## Propósito
 
-You are a sub-agent responsible for creating PROPOSALS. You take the exploration analysis (or direct user input) and produce a structured `proposal.md` document inside the change folder.
+Eres un subagente responsable de la creación de PROPUESTAS. Tu función es tomar el análisis de exploración (o la entrada directa del usuario) y generar un documento estructurado denominado `proposal.md` dentro de la carpeta de cambio.
 
-## What You Receive
+## Qué recibes
 
-From the orchestrator:
-- Change name (e.g., "add-dark-mode")
-- Exploration analysis (from sdd-explore) OR direct user description
-- Artifact store mode (`openspec | none`)
+Desde el orquestador:
+- Nombre del cambio (ej: "agregar-modo-oscuro")
+- Análisis exploratorio (desde sdd-explore) O descripción directa del usuario
+- Modo de almacenamiento de artefactos (`openspec | none`)
 
-## Execution and Persistence Contract
+## Ejecución y Contrato de Persistencia
 
-Read and follow `skills/_shared/persistence-contract.md` for mode resolution rules.
+Lee y sigue `skills/_shared/persistence-contract.md` para las reglas del modo de resolución.
 
-- If mode is `openspec`: Read and follow `skills/_shared/openspec-convention.md`.
-- If mode is `none`: Return result only. Never create or modify project files.
+- Si el modo es `openspec`: Lee y sigue `skills/_shared/openspec-convention.md`.
+- Si el modo es `none`: Devuelve sólo el resultado. Nunca crees o modifiques archivos del proyecto.
 
-## What to Do
+## Qué hacer
 
-### Step 1: Load Skill Registry
+### Paso 1: Carga el Registro de Skill
 
-**Do this FIRST, before any other work.**
+**Haz esto PRIMERO, antes que cualquier otro trabajo.**
 
-1. Read `.atl/skill-registry.md` from the project root
-2. If not exists: proceed without skills (not an error)
+1. Lee `.atl/skill-registry.md` desde la raíz del proyecto
+2. Si no existe: procede sin skills (no es un error)
 
-From the registry, identify and read any skills whose triggers match your task. Also read any project convention files listed in the registry.
+Desde el registro, identifica y lee las skills cuyos triggers coinciden con tu tarea. También lee cualquier archivo de convención del proyecto listado en el registro.
 
-### Step 2: Create Change Directory
+### Paso 2: Crea el Directorio de Cambio
 
-**IF mode is `openspec`:** create the change folder structure:
+**Si modo es `openspec`:** crea la estructura del directorio de cambio:
 
 ```
-openspec/changes/{change-name}/
+openspec/changes/{nombre-del-cambio}/
 └── proposal.md
 ```
 
-**IF mode is `none`:** Do NOT create any `openspec/` directories. Skip this step.
+**Si el modo es `none`:** NO crear ningun directorio `openspec/`. Salta este paso.
 
-### Step 3: Read Existing Specs
+### Paso 3: Leer las Spec Existentes
 
-**IF mode is `openspec` :** If `openspec/specs/` has relevant specs, read them to understand current behavior that this change might affect.
+**Si el modo es `openspec` :** Si `openspec/specs/` tiene specs relevantes, Revísalos para comprender el comportamiento actual que podría verse afectado por este cambio.
 
-**IF mode is `none`:** Skip — no existing specs to read.
+**Si el modo es `none`:** Salta — no existen specs para revisar.
 
-### Step 4: Write proposal.md
+### Paso 4: Escribe proposal.md
 
 ```markdown
-# Proposal: {Change Title}
+# Propuesta: {Título del Cambio}
 
-## Intent
+## Intención
 
-{What problem are we solving? Why does this change need to happen?
-Be specific about the user need or technical debt being addressed.}
+{¿Qué problema estamos resolviendo? ¿Por qué este cambio es necesario?
+Especifica claramente la necesidad del usuario o la deuda técnica que se está atendiendo.}
 
-## Scope
+## Alcance
 
-### In Scope
-- {Concrete deliverable 1}
-- {Concrete deliverable 2}
-- {Concrete deliverable 3}
+### Dentro del Alcance
+- {Entregable Concreto 1}
+- {Entregable Concreto 2}
+- {Entregable Concreto 3}
 
-### Out of Scope
-- {What we're explicitly NOT doing}
-- {Future work that's related but deferred}
+### Fuera de Alcance
+- {Explícitamente qué NO estamos haciendo}
+- {Trabajo futuro relacionado (no incluido en este cambio)}
 
-## Approach
+## Estrategia de implementación
 
-{High-level technical approach. How will we solve this?
-Reference the recommended approach from exploration if available.}
+{Enfoque técnico de alto nivel para resolver el problema.
+Incluir el enfoque recomendado definido durante la exploración, si existe.}
 
-## Affected Areas
+## Áreas Afectadas
 
-| Area | Impact | Description |
+| Area | Impacto | Descripción |
 |------|--------|-------------|
-| `path/to/area` | New/Modified/Removed | {What changes} |
+| `path/to/area` | New/Modified/Removed | {qué cambia} |
 
-## Risks
+## Riesgos
 
-| Risk | Likelihood | Mitigation |
+| Riesgo | Probabilidad de ocurrencia | Mitigación |
 |------|------------|------------|
-| {Risk description} | Low/Med/High | {How we mitigate} |
+| {Descripción del riesgo} | Low/Med/High | {Cómo lo mitigamos} |
 
-## Rollback Plan
+## Plan de Rollback
 
-{How to revert if something goes wrong. Be specific.}
+{Cómo volver atrás si algo sale mal. Sé específico.}
 
-## Dependencies
+## Dependencias
 
-- {External dependency or prerequisite, if any}
+- {Dependencias externas o pre-requisitos, si hay alguno}
 
-## Success Criteria
+## Criterio de Aceptación
 
-- [ ] {How do we know this change succeeded?}
-- [ ] {Measurable outcome}
+- [ ] {¿Cómo sabemos que este cambio fue exitoso?}
+- [ ] {Resultados medibles esperados}
 ```
 
-### Step 5: Persist Artifact
+### Paso 5: Persistencia de Artefactos
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es MANDATORIO — NO lo saltees.**
 
-If mode is `openspec`: the file was already written in Step 4.
+Si el modo es `openspec`: el archivo ya fue escrito en el Paso 4.
 
-If you skip this step, the next phase (sdd-spec) will NOT be able to find your proposal and the pipeline BREAKS.
+Si salteas este paso, la próxima fase (sdd-spec) NO podrá encontrar tu propuesta y el pipeline SE ROMPE.
 
 ### Step 6: Return Summary
 
-Return to the orchestrator:
+Devuelve al orquestador:
 
 ```markdown
-## Proposal Created
+## Propuesta Creada
 
-**Change**: {change-name}
-**Location**: `openspec/changes/{change-name}/proposal.md` (openspec) | inline (none)
+**Cambio**: {nombre-del-cambio}
+**Ubicación**: `openspec/changes/{change-name}/proposal.md` (openspec) | inline (none)
 
 ### Summary
-- **Intent**: {one-line summary}
-- **Scope**: {N deliverables in, M items deferred}
-- **Approach**: {one-line approach}
-- **Risk Level**: {Low/Medium/High}
+- **Intención**: {Descripción concisa del cambio}
+- **Alcance**: {N entregables, M items diferidos}
+- **Enfoque**: {Descripción concisa del enfoque}
+- **Nivel de Riesgo**: {Low/Medium/High}
 
-### Next Step
-Ready for specs (sdd-spec) or design (sdd-design).
+### Próximo Paso
+Listo para las specs (sdd-spec) o diseño (sdd-design).
 ```
 
-## Rules
+## Reglas
 
-- In `openspec` mode, ALWAYS create the `proposal.md` file
-- If the change directory already exists with a proposal, READ it first and UPDATE it
-- Keep the proposal CONCISE - it's a thinking tool, not a novel
-- Every proposal MUST have a rollback plan
-- Every proposal MUST have success criteria
-- Use concrete file paths in "Affected Areas" when possible
-- Apply any `rules.proposal` from `openspec/config.yaml`
-- Return a structured envelope with: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
+- En modo `openspec`, SIEMPRE crea el archivo `proposal.md`
+- Si el directorio de cambios ya existe con una propuesta, REVÍSALA primero y ACTUALÍZALA
+- Mantiene la propuesta CONCISA - sirve para pensar, no para contar una historia
+- Cada propuesta DEBE tener un plan de rollback
+- Cada propuesta DEBE tener un criterio de aceptación
+- Incluye rutas de archivos concretas en “Áreas afectadas” siempre que sea posible
+- Aplica cada `rules.proposal` de `openspec/config.yaml`
+- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`

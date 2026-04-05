@@ -33,8 +33,6 @@ Antes de comenzar, carga cualquier contexto y especificaciones existentes del pr
 - **openspec**: Lee `openspec/config.yaml` y `openspec/specs/`.
 - **none**: Usa únicamente el contexto que haya pasado el orquestador en el prompt.
 
-## What to Do
-
 ## Qué hacer
 
 ### Paso 1: Carga el Registro de Skill
