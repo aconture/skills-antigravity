@@ -144,4 +144,4 @@ Listo para las specs (sdd-spec) o diseño (sdd-design).
 - Cada propuesta DEBE tener un criterio de aceptación
 - Incluye rutas de archivos concretas en “Áreas afectadas” siempre que sea posible
 - Aplica cada `rules.proposal` de `openspec/config.yaml`
-- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`
+- Devuelve un contenedor estructurado con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`

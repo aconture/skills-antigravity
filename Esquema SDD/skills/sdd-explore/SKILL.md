@@ -137,4 +137,4 @@ Devuelve EXACTAMENTE este formato al orquestador (y escribe el mismo contenido e
 - Mantén tu análisis CONCISO — el orquestador necesita un resumen, no una novela
 - Si no puedes encontrar información suficiente, indícalo claramente
 - Si la solicitud es demasiado vaga para explorarla, indica qué aclaración se necesita
-- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`
+- Devuelve un contenedor estructurado con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`

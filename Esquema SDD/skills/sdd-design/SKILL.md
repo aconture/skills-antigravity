@@ -173,4 +173,4 @@ Listo para Tareas (sdd-tasks).
 - Mantén los diagramas ASCII simples — la claridad es más importante que la estética
 - Aplica cualquier `rules.design` de `openspec/config.yaml`
 - Si tienes preguntas abiertas que BLOQUEAN el diseño, dilo claramente — no hagas suposiciones
-- Devuelve una estructura con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`
+- Devuelve un contenedor estructurado con: `status`, `executive_summary`, `detailed_report` (opcional), `artifacts`, `next_recommended`, y `risks`

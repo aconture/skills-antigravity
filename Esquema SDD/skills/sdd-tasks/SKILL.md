@@ -1,146 +1,147 @@
 ---
 name: sdd-tasks
 description: >
-  Break down a change into an implementation task checklist.
-  Trigger: When the orchestrator launches you to create or update the task breakdown for a change.
+  Desglosa un cambio en una lista de tareas de implementación.
+  Trigger: cuando el orquestador te inicia para crear o actualizar el desglose de tareas de un cambio.
 license: MIT
 metadata:
-  author: gentleman-programming
+  author: AGCC took from gentleman-programming
   version: "2.0"
 ---
 
-## Purpose
+## Propósito
 
-You are a sub-agent responsible for creating the TASK BREAKDOWN. You take the proposal, specs, and design, then produce a `tasks.md` with concrete, actionable implementation steps organized by phase.
+Eres un subagente responsable de crear el DESGLOSE DE TAREAS. Tomas la propuesta, las especificaciones y el diseño, y produces un archivo `tasks.md` con pasos de implementación concretos y accionables, organizados por fase.
 
-## What You Receive
+## Qué recibes
 
-From the orchestrator:
-- Change name
-- Artifact store mode (`openspec | none`)
+Desde el orquestador:
+- Nombre del cambio (ej: "agregar-modo-oscuro")
+- Modo de almacenamiento de artefactos (`openspec | none`)
 
-## Execution and Persistence Contract
+## Ejecución y Contrato de Persistencia
 
-Read and follow `skills/_shared/persistence-contract.md` for mode resolution rules.
+Lee y sigue `skills/_shared/persistence-contract.md` para las reglas del modo de resolución.
 
-- If mode is `openspec`: Read and follow `skills/_shared/openspec-convention.md`.
-- If mode is `none`: Return result only. Never create or modify project files.
+- Si el modo es `openspec`: Lee y sigue `skills/_shared/openspec-convention.md`.
+- Si el modo es `none`: Devuelve sólo el resultado. Nunca crees o modifiques archivos del proyecto.
 
-## What to Do
+## Qué hacer
 
-### Step 1: Load Skill Registry
+### Paso 1: Carga el Registro de Skill
 
-**Do this FIRST, before any other work.**
+**Haz esto PRIMERO, antes que cualquier otro trabajo.**
 
-1. Read `.atl/skill-registry.md` from the project root
-3. If not exists: proceed without skills (not an error)
+1. Lee `.atl/skill-registry.md` desde la raíz del proyecto
+2. Si no existe: procede sin skills (no es un error)
 
-From the registry, identify and read any skills whose triggers match your task. Also read any project convention files listed in the registry.
+Desde el registro, identifica y lee las skills cuyos triggers coinciden con tu tarea. También lee cualquier archivo de convención del proyecto listado en el registro.
 
-### Step 2: Analyze the Design
+### Paso 2: Analiza el Diseño
 
-From the design document, identify:
-- All files that need to be created/modified/deleted
-- The dependency order (what must come first)
-- Testing requirements per component
+A partir del documento de diseño, identifica:
+- Todos los archivos que deben ser creados, modificados o eliminados
+- El orden de dependencias (qué debe hacerse primero)
+- Los requisitos de pruebas por componente
 
-### Step 3: Write tasks.md
+### Paso 3: Escribe tasks.md
 
-**IF mode is `openspec`:** Create the task file:
+**Si el modo es `openspec`:** Crea el archivo de tareas:
 
 ```
-openspec/changes/{change-name}/
+openspec/changes/{nombre-del-cambio}/
 ├── proposal.md
 ├── specs/
 ├── design.md
-└── tasks.md               ← You create this
+└── tasks.md               ← Tu creas este
 ```
 
-**IF mode is `none`:** Do NOT create any `openspec/` directories or files. Compose the tasks content in memory — you will persist it in Step 4.
+**Si el modo es `none`:** NO crear ningun directorio `openspec/`. Compone el contenido de las tareas en memoria - las persistirás en el Paso 4.
 
-#### Task File Format
+
+#### Formato del Archivo de Tareas
 
 ```markdown
-# Tasks: {Change Title}
+# Tareas: {Título del Cambio}
 
-## Phase 1: {Phase Name} (e.g., Infrastructure / Foundation)
+## Fase 1: {Nombre de la Fase} (e.g., Infraestructura / Fundamentos)
 
-- [ ] 1.1 {Concrete action — what file, what change}
-- [ ] 1.2 {Concrete action}
-- [ ] 1.3 {Concrete action}
+- [ ] 1.1 {Acción concreta — qué archivo, qué cambio}
+- [ ] 1.2 {Acción concreta}
+- [ ] 1.3 {Acción concreta}
 
-## Phase 2: {Phase Name} (e.g., Core Implementation)
+## Fase 2: {Nombre de la Fase} (e.g., Implementación del Core)
 
-- [ ] 2.1 {Concrete action}
-- [ ] 2.2 {Concrete action}
-- [ ] 2.3 {Concrete action}
-- [ ] 2.4 {Concrete action}
+- [ ] 2.1 {Acción concreta}
+- [ ] 2.2 {Acción concreta}
+- [ ] 2.3 {Acción concreta}
+- [ ] 2.4 {Acción concreta}
 
-## Phase 3: {Phase Name} (e.g., Testing / Verification)
+## Fase 3: {Nombre de la Fase} (e.g., Testing / Verificación)
 
-- [ ] 3.1 {Write tests for ...}
-- [ ] 3.2 {Write tests for ...}
-- [ ] 3.3 {Verify integration between ...}
+- [ ] 3.1 {Escribe los tests para ...}
+- [ ] 3.2 {Escribe los tests para ...}
+- [ ] 3.3 {Verifica la integración entre ...}
 
-## Phase 4: {Phase Name} (e.g., Cleanup / Documentation)
+## Fase 4: {Nombre de la Fase} (e.g., Depuración / Documentación)
 
-- [ ] 4.1 {Update docs/comments}
-- [ ] 4.2 {Remove temporary code}
+- [ ] 4.1 {Actualiza docs/commentarios}
+- [ ] 4.2 {Elimina código temporario}
 ```
 
-### Task Writing Rules
+### Reglas de Escritura de Tareas
 
-Each task MUST be:
+Cada tarea DEBE ser:
 
-| Criteria | Example ✅ | Anti-example ❌ |
+| Criterio | Ejemplo ✅ | Anti-ejemplo ❌ |
 |----------|-----------|----------------|
-| **Specific** | "Create `internal/auth/middleware.go` with JWT validation" | "Add auth" |
-| **Actionable** | "Add `ValidateToken()` method to `AuthService`" | "Handle tokens" |
-| **Verifiable** | "Test: `POST /login` returns 401 without token" | "Make sure it works" |
-| **Small** | One file or one logical unit of work | "Implement the feature" |
+| **Específica** | "Crea `internal/auth/middleware.go` con validación JWT" | "Add auth" |
+| **Accionable** | "Agrega método `ValidateToken()` a `AuthService`" | "Handle tokens" |
+| **Verificable** | "Test: `POST /login` devuelve 401 sin token" | "Make sure it works" |
+| **Reducida** | Un archivo o unidad lógica por trabajo | "Implement the feature" |
 
-### Phase Organization Guidelines
+### Lineamientos de la Organización de Fases
 
 ```
-Phase 1: Foundation / Infrastructure
-  └─ New types, interfaces, database changes, config
-  └─ Things other tasks depend on
+Fase 1: Fundamentos / Infraestructura
+  └─ Nuevos tipos, interfaces, cambios de esquema de base de datos y configuración
+  └─ Elementos requeridos por tareas posteriores
 
-Phase 2: Core Implementation
-  └─ Main logic, business rules, core behavior
-  └─ The meat of the change
+Fase 2: Implementación principal
+  └─ Lógica central, reglas de negocio y comportamiento base
+  └─ Parte principal del cambio
 
-Phase 3: Integration / Wiring
-  └─ Connect components, routes, UI wiring
-  └─ Make everything work together
+Fase 3: Integración / Conexión
+  └─ Integrar componentes, rutas y cableado de la UI
+  └─ Hacer que todo funcione en conjunto
 
 Phase 4: Testing
-  └─ Unit tests, integration tests, e2e tests
-  └─ Verify against spec scenarios
+  └─ Pruebas unitarias, pruebas de integración y pruebas end‑to‑end (E2E)
+  └─ Verificar contra los escenarios definidos en la especificación
 
-Phase 5: Cleanup (if needed)
-  └─ Documentation, remove dead code, polish
+Fase 5: Limpieza (si es necesaria)
+  └─ Documentación, eliminación de código muerto y pulido final
 ```
 
-### Step 4: Persist Artifact
+### Paso 4: Persistencia de Artefactos
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es MANDATORIO — NO lo saltees.**
 
-If mode is `openspec`: the file was already written in Step 3.
+Si el modo es `openspec`: el archivo ya fue escrito en el Paso 3.
 
-If you skip this step, the next phase (sdd-apply) will NOT be able to find your tasks and the pipeline BREAKS.
+Si salteas este paso, la próxima fase (sdd-apply) NO podrá encontrar tus tareas y el pipeline SE ROMPE.
 
-### Step 5: Return Summary
+### Paso 5: Resumen de la Devolución
 
-Return to the orchestrator:
+Devuelve al orquestador:
 
 ```markdown
-## Tasks Created
+## Tareas Creadas
 
-**Change**: {change-name}
-**Location**: `openspec/changes/{change-name}/tasks.md` (openspec) | inline (none)
+**Cambio**: {nombre-del-cambio}
+**Ubicación**: `openspec/changes/{change-name}/tasks.md` (openspec) | inline (none)
 
-### Breakdown
+### Desglose de Tareas
 | Phase | Tasks | Focus |
 |-------|-------|-------|
 | Phase 1 | {N} | {Phase name} |
@@ -148,21 +149,21 @@ Return to the orchestrator:
 | Phase 3 | {N} | {Phase name} |
 | Total | {N} | |
 
-### Implementation Order
-{Brief description of the recommended order and why}
+### Orden de Implementación
+{Descripción breve del orden recomendado y el motivo}
 
-### Next Step
-Ready for implementation (sdd-apply).
+### Próximo Paso
+Listo para la implementación (sdd-apply).
 ```
 
-## Rules
+## Reglas
 
-- ALWAYS reference concrete file paths in tasks
-- Tasks MUST be ordered by dependency — Phase 1 tasks shouldn't depend on Phase 2
-- Testing tasks should reference specific scenarios from the specs
-- Each task should be completable in ONE session (if a task feels too big, split it)
-- Use hierarchical numbering: 1.1, 1.2, 2.1, 2.2, etc.
-- NEVER include vague tasks like "implement feature" or "add tests"
-- Apply any `rules.tasks` from `openspec/config.yaml`
-- If the project uses TDD, integrate test-first tasks: RED task (write failing test) → GREEN task (make it pass) → REFACTOR task (clean up)
-- Return a structured envelope with: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
+- SIEMPRE referencia rutas de archivos concretas en las tareas
+- Las tareas DEBEN estar ordenadas por dependencias — las tareas de la Fase 1 no deben depender de la Fase 2
+- Las tareas de testing deben hacer referencia a escenarios específicos definidos en las especificaciones
+- Cada tarea debe poder completarse en UNA sola sesión (si una tarea resulta demasiado grande, divídela)
+- Usa numeración jerárquica: 1.1, 1.2, 2.1, 2.2, etc
+- NUNCA incluyas tareas vagas como “implementar funcionalidad” o “agregar pruebas”
+- Aplica cualquier regla `rules.tasks` definida en `openspec/config.yaml`
+- Si el proyecto utiliza TDD, integra tareas con enfoque test‑first: tarea RED (escribir la prueba que falla) → tarea GREEN (hacer que pase) → tarea REFACTOR (limpiar y mejorar el código).
+- Devuelve un contenedor estructurado con: `status`, `executive_summary`, `detailed_report` (optional), `artifacts`, `next_recommended`, and `risks`
