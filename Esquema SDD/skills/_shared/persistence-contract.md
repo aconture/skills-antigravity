@@ -10,13 +10,13 @@ Resolucion default (cuando el orquestador no setea explícitamente el modo):
 
 `openspec` es SIEMPRE el usado por default.
 
-Cuando hagas fallback a `none`, recomienda al usuario habilitar `openspec` para mejores resultados.
+Cuando hagas fallback a `none`, recomienda al usuario habilitar `openspec`.
 
 ## Comportamiento por modo
 
 | Mode | Read from | Write to | Project files |
 |------|-----------|----------|---------------|
-| `openspec` | Filesystem (see `openspec-convention.md`) | Filesystem | Yes |
+| `openspec` | Filesystem | Filesystem | Yes |
 | `none` | Orchestrator prompt context | Nowhere | Never |
 
 
@@ -26,48 +26,43 @@ Cuando hagas fallback a `none`, recomienda al usuario habilitar `openspec` para 
 
 ## Persistencia de Estado (Orquestador)
 
-El orquestador persiste el estado del DAG después de cada transición de fase. Esto habilita la recuperación del SDD después de la compactación del contexto.
+El orquestador persiste el estado del DAG después de cada transición de fase para permitir la recuperación del SDD tras una compactación.
 
 | Mode | Persist State | Recover State |
 |------|--------------|---------------|
 | `openspec` | Write `openspec/changes/{change-name}/state.yaml` | Read `openspec/changes/{change-name}/state.yaml` |
-| `none` | Not possible — state lives only in context | Not possible — warn user |
+| `none` | Not possible — advierte al usuario | Not possible |
 
 ## Reglas Comunes
 
-- Si el modo es `none`, NO crear o modificar ningun archivo de proyecto. Devolver los resultados únicamente en línea (inline).
-- Si el modo es `openspec`, escribe archivos SOLO en los path definidos en `openspec-convention.md`.
+- none → NO crear ni modificar ningún archivo del proyecto; devolver únicamente los resultados en línea
+- openspec → escribir archivos ÚNICAMENTE en las rutas definidas en `openspec-convention.md`
+- NUNCA fuerces la creación de `openspec/` a menos que el orquestador haya pasado explícitamente `openspec`
 - Si no estás seguro de qué modo usar, default es `openspec`.
 
 ## Reglas de contexto del Sub-Agent
 
-Los subagentes se inician con un contexto limpio y SIN acceso a las instrucciones o al protocolo de memoria del orquestador. El orquestador controla qué contexto reciben y los subagentes son responsables de persistir lo que producen.
+Los subagentes se inician con un contexto limpio y SIN acceso a las instrucciones o al protocolo de memoria del orquestador.
 
-### Quién Lee, quién Escribe
+Quién lee y quién escribe:
+- **No SDD (tarea general):** el orquestador consulta `openspec/`, pasa un resumen en el prompt; el sub‑agente guarda los hallazgos mediante `openspec/`
+- **SDD (fase con dependencias):** el sub‑agente lee los artefactos directamente desde el backend; el sub‑agente guarda su propio artefacto
+- **SDD (fase sin dependencias, por ejemplo *explore*):** nadie lee; el sub‑agente guarda su artefacto
 
-| Context | Who reads from backend | Who writes to backend |
-|---------|----------------------|----------------------|
-| Non-SDD (general task) | **Orchestrator** searches openspec/, passes summary in prompt | **Sub-agent** saves discoveries/decisions via `openspec/` |
-| SDD (phase with dependencies) | **Sub-agent** reads artifacts directly from backend | **Sub-agent** saves its artifact |
-| SDD (phase without dependencies, e.g. explore) | Nobody | **Sub-agent** saves its artifact |
+Por qué esta separación:
+- **El orquestador lee en tareas no‑SDD:** sabe qué contexto es relevante; si los sub‑agentes realizan búsquedas por su cuenta, desperdician tokens en resultados irrelevantes.
+- **Los sub‑agentes leen en SDD:** los artefactos SDD son grandes; incluirlos en línea dentro del prompt del orquestador consumiría toda la ventana de contexto.
+- **Los sub‑agentes siempre escriben:** tienen el nivel completo de detalle de lo ocurrido; ese matiz se pierde cuando los resultados vuelven resumidos al orquestador.
 
-### Por qué esta división
-
-- **Orquestador leyendo non-SDD**: el orquestador debe saber qué contexto es relevante. Los subagentes realizando sus propias búsquedas desperdician tokens en resultados potencialmente irrelevantes.
-- **Sub-agentes leen SDD**: Los artefactos de SDD son extensos (especificaciones, diseños). El orquestador NO debe incluirlos en línea (inline); en su lugar, pasa referencias de los artefactos (claves de tema o rutas de archivos) y el subagente recupera el contenido completo.
-- **Sub-agentes siempre escriben**: ellos poseen el detalle completo. Para cuando los resultados regresan al orquestador, los matices se pierden. Persisten en la fuente.
-
-### Instrucciones del prompt del orquestador para los subagentes
+### Instrucciones del Prompt del Orquestador para los Subagentes
 
 Cuando se invoca a un sub-agente, el orquestador DEBE incluir instrucciones de persistencia en el prompt:
 
 **Non-SDD**:
 ```
 PERSISTENCIA (MANDATORIO):
-Si realizas hallazgos importantes, decisiones, o corriges errores, DEBES guardarlos 
-en openspec antes de responder:
-NO responda sin antes guardar lo que ha aprendido. Así es como el equipo construye conocimiento 
-persistente a través de las sesiones.
+Si realizas hallazgos importantes, decisiones, o corriges errores, DEBES guardarlos en openspec antes de responder:
+NO responda sin antes guardar lo que ha aprendido. Así es como el equipo construye conocimiento persistente a través de las sesiones.
 ```
 
 **SDD (con dependencias)**:
@@ -82,7 +77,7 @@ Lee estos artefactos antes de iniciar (accede directo a los archivos desde el re
      - `tasks.md` (Revisa la lista de tareas actuales y su progreso) [2]
   REQUERIDO: Los Sub-agentes DEBEN cargar estos archivos para garantizar que se cumpla la dependencias de fase y se preserve el matiz técnico.
 
-PERSISTENCIA (MANDATORIO — NO lo saltees):
+PERSISTENCIA (MANDATORIO — NO lo omitas):
 Después de completar tu trabajo, **DEBES** guardar tus hallazgos directamente en el sistema de archivos del repositorio:
   Archivo Destino: `openspec/{change-name}/{artifact-type}.md`
   Formato: contenido Full Markdown.
@@ -112,9 +107,7 @@ El registro SIEMPRE se escribe en `.atl/skill-registry.md` en el root del proyec
 |--------|----------|----------|
 | File | `.atl/skill-registry.md` | READ FIRST |
 
-### Cómo generar/actualizar
-
-Ejecuta la skill `skill-registry`, o ejecuta `sdd-init` (la cual include la generación del registro). 
+Para generar o actualizar: ejecutar la skill skill-registry o ejecutar sdd-init.
 
 ### Protocolo de carga de habilidades del subagente
 

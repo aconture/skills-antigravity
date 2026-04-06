@@ -11,7 +11,7 @@ openspec/
 └── changes/                 <- Active changes
     ├── archive/             <- Completed changes (YYYY-MM-DD-{change-name}/)
     └── {change-name}/       <- Active change folder
-        ├── state.yaml       <- DAG state (orchestrator, survives compaction)
+        ├── state.yaml       <- DAG state (survives compaction)
         ├── exploration.md   <- (optional) from sdd-explore
         ├── proposal.md      <- from sdd-propose
         ├── specs/           <- from sdd-spec
@@ -26,7 +26,7 @@ openspec/
 
 | Skill | Creates / Reads | Path |
 |-------|----------------|------|
-| orchestrator | Creates/Updates | `openspec/changes/{change-name}/state.yaml` (DAG state for compaction recovery) |
+| orchestrator | Creates/Updates | `openspec/changes/{change-name}/state.yaml` |
 | sdd-init | Creates | `openspec/config.yaml`, `openspec/specs/`, `openspec/changes/`, `openspec/changes/archive/` |
 | sdd-explore | Creates (optional) | `openspec/changes/{change-name}/exploration.md` |
 | sdd-propose | Creates | `openspec/changes/{change-name}/proposal.md` |
@@ -40,8 +40,6 @@ openspec/
 
 ## Reading Artifacts
 
-Cada skill lee sus dependencias desde el filesystem:
-
 ```
 Proposal:  openspec/changes/{change-name}/proposal.md
 Specs:     openspec/changes/{change-name}/specs/  (all domain subdirectories)
@@ -54,7 +52,7 @@ Main specs: openspec/specs/{domain}/spec.md
 
 ## Reglas de Escritura
 
-- SIEMPRE crea el directorio de cambios (`openspec/changes/{change-name}/`) antes de generar los artefactos
+- SIEMPRE crea el directorio de cambios antes de generar los artefactos
 - Si un archivo ya existe, LEERLO antes y luego ACTUALIZARLO (no lo sobreescribas a ciegas)
 - Si el directorio de cambios ya existe y contiene artefactos, el cambio es una CONTINUACION
 - Usa la sección `openspec/config.yaml` `rules` para aplicar constraints específicas del proyecto para cada fase
@@ -86,11 +84,11 @@ rules:
   apply:
     - Sigue patrones de código existente
     tdd: false           # Set to true to enable RED-GREEN-REFACTOR
-    test_command: ""     # e.g., "npm test", "pytest"
+    test_command: ""
   verify:
-    test_command: ""     # Override for verification
-    build_command: ""    # Override for build check
-    coverage_threshold: 0  # Set > 0 to enable coverage check
+    test_command: ""
+    build_command: ""
+    coverage_threshold: 0
   archive:
     - Notifica antes de ejecutar merge de deltas destructivos
 ```
