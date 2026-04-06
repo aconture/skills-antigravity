@@ -43,7 +43,8 @@ Generas o actualizas el **registro de skills** — un catálogo de todas las hab
 5. Para cada skill encontrada, lee únicamente el *frontmatter* (las primeras 10 líneas) para extraer:
    - El campo `name`
    - El campo `description` → extraer el texto del disparador (después de "Trigger:" en la descripción)  
-6. Construye una tabla con las columnas: **Trigger | Nombre de la skill | Ruta completa**
+6. Construye una tabla con las columnas: **Trigger | Nombre de la skill | Ruta**.  
+   **IMPORTANTE**: Para las **skills de nivel proyecto**, usa rutas **relativas** a la raíz del proyecto. Para las **skills globales** (nivel usuario), usa rutas **absolutas** (o con `~` si es soportado).
 
 ### Step 2: Scan Project Conventions
 
@@ -61,7 +62,8 @@ Generas o actualizas el **registro de skills** — un catálogo de todas las hab
    - `GEMINI.md`
 2. **Si se encuentra un archivo índice** (por ejemplo, `agents.md`, `AGENTS.md`): LEE su contenido y extrae **todas las rutas de archivos referenciadas**. Estos archivos índice suelen listar las convenciones del proyecto junto con sus rutas — extrae **cada ruta mencionada** e inclúyela en la tabla del registro junto con el propio archivo índice.
 3. Para archivos **no índice** (`.cursorrules`, `CLAUDE.md`, etc.): registra directamente el archivo.
-4. La tabla final debe incluir el archivo índice Y todas las rutas que referencia — **cero saltos adicionales** para los sub‑agentes.
+4. **IMPORTANTE**: Usa siempre rutas **relativas** a la raíz del proyecto para todas las convenciones.
+5. La tabla final debe incluir el archivo índice Y todas las rutas que referencia — **cero saltos adicionales** para los sub‑agentes.
 
 ### Paso 3: Escribe el Registro
 
@@ -76,7 +78,7 @@ Como PRIMER paso antes de comenzar cualquier trabajo, identifica y carga las ski
 
 | Trigger | Skill | Ruta |
 |---------|-------|------|
-| {trigger extraído del frontmatter} | {nombre de la skill} | {ruta completa al archivo SKILL.md} |
+| {trigger extraído del frontmatter} | {nombre de la skill} | {ruta (relativa si es de proyecto, absoluta si es global)} |
 | ... | ... | ... |
 
 ## Convenciones del proyecto
@@ -136,3 +138,4 @@ Para actualizarlo después de instalar o eliminar skills, vuelve a ejecutar este
 - Incluye **TODOS** los archivos índice de convenciones encontrados (no solo el primero)
 - Si no se encuentran skills o convenciones, escribe un registro vacío (para evitar que los sub‑agentes pierdan tiempo buscando)
 - Agrega `.atl/` al `.gitignore` del proyecto si existe y `.atl` no está ya listado
+- **PORTABILIDAD**: Prioriza siempre el uso de rutas relativas para cualquier recurso que se encuentre dentro del espacio de trabajo del proyecto.
