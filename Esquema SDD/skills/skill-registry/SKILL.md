@@ -1,48 +1,49 @@
 ---
 name: skill-registry
 description: >
-  Create or update the skill registry for the current project. Scans user skills and project conventions, and writes .atl/skill-registry.md.
-  Trigger: When user says "update skills", "skill registry", "actualizar skills", "update registry", or after installing/removing skills.
+   Crea o actualiza el registro de skills del proyecto actual. Analiza las skills definidas por el usuario y las convenciones del proyecto, y escribe el archivo .atl/skill-registry.md.
+   Trigger: cuando el usuario dice “update skills”, “skill registry”, “actualizar skills”, “update registry”, o después de instalar o eliminar skills.
 license: MIT
 metadata:
   author: AGCC took from gentleman-programming
   version: "1.0"
 ---
 
-## Purpose
+## Propósito
 
-You generate or update the **skill registry** — a catalog of all available skills (user-level and project-level) that sub-agents read before starting any task. This ensures every sub-agent knows what skills exist and can load the relevant ones.
+Generas o actualizas el **registro de skills** — un catálogo de todas las habilidades disponibles (a nivel de usuario y a nivel de proyecto) que los sub‑agentes leen antes de comenzar cualquier tarea. Esto garantiza que cada sub‑agente sepa qué skills existen y pueda cargar las relevantes.
 
-## When to Run
+## Cuándo ejecutar
 
-- After installing or removing skills
-- After setting up a new project
-- When the user explicitly asks to update the registry
-- As part of `sdd-init` (it calls this same logic)
+- Después de instalar o eliminar skills
+- Después de configurar un proyecto nuevo
+- Cuando el usuario solicita explícitamente actualizar el registro
+- Como parte de `sdd-init` (utiliza esta misma lógica)
 
-## What to Do
+## Qué hacer
 
-### Step 1: Scan User Skills
+### Paso 1: Escanear skills del usuario
 
-1. Glob for `*/SKILL.md` files across ALL known skill directories. Check every path below — scan ALL that exist, not just the first match:
+1. Busca (glob) archivos `*/SKILL.md` en TODOS los directorios de skills conocidos.
+   Revisa **todas** las rutas listadas a continuación — escanea **TODAS las que existan**, no solo la primera coincidencia:
 
-   **User-level (global skills):**
+   **Nivel usuario (skills globales):**
    - `~/.gemini/skills/` — Gemini CLI
    - `~/.gemini/antigravity/skills/` — Antigravity CLI
-   - The parent directory of this skill file (catch-all for any tool)
+   - El directorio padre de este archivo de skill (comodín para cualquier herramienta)
 
-   **Project-level (workspace skills):**
+   **Nivel proyecto (skills del workspace):**
    - `{project-root}/.gemini/skills/` — Gemini CLI
    - `{project-root}/.agent/skills/` — Antigravity (workspace)
-   - `{project-root}/skills/` — Generic
+   - `{project-root}/skills/` — Genérico
 
-2. **SKIP `sdd-*` and `_shared`** — those are SDD workflow skills, not coding/task skills
-3. Also **SKIP `skill-registry`** — that's this skill
-4. **Deduplicate** — if the same skill name appears in multiple locations, keep the project-level version (more specific). If both are user-level, keep the first found.
-5. For each skill found, read only the frontmatter (first 10 lines) to extract:
-   - `name` field
-   - `description` field → extract the trigger text (after "Trigger:" in the description)
-6. Build a table of: Trigger | Skill Name | Full Path
+2. **OMITIR `sdd-*` y `_shared`** — corresponden a skills del flujo SDD, no a skills de codificación o tareas
+3. También **OMITIR `skill-registry`** — esta es precisamente esa skill  
+4. **Eliminar duplicados** — si el mismo nombre de skill aparece en múltiples ubicaciones, conserva la versión a nivel proyecto (más específica). Si ambas son de nivel usuario, conserva la primera encontrada.  
+5. Para cada skill encontrada, lee únicamente el *frontmatter* (las primeras 10 líneas) para extraer:
+   - El campo `name`
+   - El campo `description` → extraer el texto del disparador (después de "Trigger:" en la descripción)  
+6. Construye una tabla con las columnas: **Trigger | Nombre de la skill | Ruta completa**
 
 ### Step 2: Scan Project Conventions
 
@@ -53,74 +54,85 @@ You generate or update the **skill registry** — a catalog of all available ski
 3. For non-index files (`.cursorrules`, `CLAUDE.md`, etc.): record the file directly.
 4. The final table should include the index file AND all paths it references — zero extra hops for sub-agents.
 
-### Step 3: Write the Registry
+### Paso 2: Escanea convenciones del proyecto
 
-Build the registry markdown:
+1. Revisa la raíz del proyecto en busca de archivos de convenciones. Busca:
+   - `agents.md` o `AGENTS.md`
+   - `GEMINI.md`
+2. **Si se encuentra un archivo índice** (por ejemplo, `agents.md`, `AGENTS.md`): LEE su contenido y extrae **todas las rutas de archivos referenciadas**. Estos archivos índice suelen listar las convenciones del proyecto junto con sus rutas — extrae **cada ruta mencionada** e inclúyela en la tabla del registro junto con el propio archivo índice.
+3. Para archivos **no índice** (`.cursorrules`, `CLAUDE.md`, etc.): registra directamente el archivo.
+4. La tabla final debe incluir el archivo índice Y todas las rutas que referencia — **cero saltos adicionales** para los sub‑agentes.
+
+### Paso 3: Escribe el Registro
+
+Construye el markdown del registro:
 
 ```markdown
-# Skill Registry
+# Registro de la Skill
 
-As your FIRST step before starting any work, identify and load skills relevant to your task from this registry.
+Como PRIMER paso antes de comenzar cualquier trabajo, identifica y carga las skills relevantes para tu tarea desde este registro.
 
-## User Skills
+## Skills del usuario
 
-| Trigger | Skill | Path |
+| Trigger | Skill | Ruta |
 |---------|-------|------|
-| {trigger from frontmatter} | {skill name} | {full path to SKILL.md} |
+| {trigger extraído del frontmatter} | {nombre de la skill} | {ruta completa al archivo SKILL.md} |
 | ... | ... | ... |
 
-## Project Conventions
+## Convenciones del proyecto
 
-| File | Path | Notes |
-|------|------|-------|
-| {index file} | {path} | Index — references files below |
-| {referenced file} | {extracted path} | Referenced by {index file} |
-| {standalone file} | {path} | |
+| Archivo | Ruta | Notas |
+|---------|------|-------|
+| {archivo índice} | {ruta} | Índice — referencia los archivos siguientes |
+| {archivo referenciado} | {ruta extraída} | Referenciado por {archivo índice} |
+| {archivo independiente} | {ruta} | |
 
-Read the convention files listed above for project-specific patterns and rules. All referenced paths have been extracted — no need to read index files to discover more.
+Lee los archivos de convenciones listados arriba para conocer los patrones y reglas específicos del proyecto.  
+Todas las rutas referenciadas ya han sido extraídas — no es necesario leer los archivos índice para descubrir más.
+
 ```
 
-### Step 4: Persist the Registry
+### Paso 4: Persiste el registro
 
-**This step is MANDATORY — do NOT skip it.**
+**Este paso es OBLIGATORIO — NO lo omitas.**
 
-#### A. Always write the file (guaranteed availability):
+#### A. Escribir siempre el archivo (disponibilidad garantizada):
 
-Create the `.atl/` directory in the project root if it doesn't exist, then write:
+Crea el directorio `.atl/` en la raíz del proyecto si no existe y luego escribe:
 
 ```
 .atl/skill-registry.md
 ```
 
-### Step 5: Return Summary
+### Step 5: Resumen de la Devolución
 
 ```markdown
-## Skill Registry Updated
+## Registro de Skill Actualizado
 
-**Project**: {project name}
-**Location**: .atl/skill-registry.md
+**Proyecto**: {nombre del proyecto}
+**Ubicación**: .atl/skill-registry.md
 
-### User Skills Found
+### Skills del usuario encontradas
 | Skill | Trigger |
 |-------|---------|
-| {name} | {trigger} |
+| {nombre} | {trigger} |
 | ... | ... |
 
-### Project Conventions Found
-| File | Path |
-|------|------|
-| {file} | {path} |
+### Convenciones del proyecto encontradas
+| Archivo | Ruta |
+|---------|------|
+| {archivo} | {ruta} |
 
-### Next Steps
-Sub-agents will automatically load relevant skills from this registry.
-To update after installing/removing skills, run this again.
+### Próximos pasos
+Los sub‑agentes cargarán automáticamente las skills relevantes desde este registro.
+Para actualizarlo después de instalar o eliminar skills, vuelve a ejecutar este proceso.
 ```
 
-## Rules
+## Reglas
 
-- ALWAYS write `.atl/skill-registry.md` regardless of any SDD persistence mode
-- SKIP `sdd-*`, `_shared`, and `skill-registry` directories when scanning
-- Only read frontmatter (first 10 lines) — do NOT read full skill files
-- Include ALL convention index files found (not just the first)
-- If no skills or conventions are found, write an empty registry (so sub-agents don't waste time searching)
-- Add `.atl/` to the project's `.gitignore` if it exists and `.atl` is not already listed
+- SIEMPRE escribe `.atl/skill-registry.md`, independientemente del modo de persistencia de SDD
+- OMITE los directorios `sdd-*`, `_shared` y `skill-registry` durante el escaneo
+- Lee **solo** el frontmatter (primeras 10 líneas) — NO leas el archivo completo de la skill
+- Incluye **TODOS** los archivos índice de convenciones encontrados (no solo el primero)
+- Si no se encuentran skills o convenciones, escribe un registro vacío (para evitar que los sub‑agentes pierdan tiempo buscando)
+- Agrega `.atl/` al `.gitignore` del proyecto si existe y `.atl` no está ya listado
